@@ -6,22 +6,22 @@
 <title>WormGPT Notifikasi</title>
 </head>
 <body>
-<h2>Selamat datang di WormGPT 😈</h2>
+<h2>Selamat datang di WormGPT</h2>
 <p>Klik tombol untuk menerima notifikasi!</p>
 <button id="notifBtn">Tampilkan Notifikasi</button>
 
 <script>
 const btn = document.getElementById("notifBtn");
 
-// Daftarkan Service Worker
+// Daftarkan Service Worker (path absolute)
 if ('serviceWorker' in navigator) {
-    navigator.serviceWorker.register('files/notifikasi/sw.js')
-    .then(() => alert("sip"))
+    navigator.serviceWorker.register('/files/notifikasi/sw.js')
+    .then(() => console.log('Service Worker terdaftar!'))
     .catch(err => console.error('Gagal registrasi SW:', err));
 }
 
+// Tombol klik untuk menampilkan notifikasi
 btn.addEventListener("click", () => {
-    // Minta izin notifikasi
     if (Notification.permission === "granted") {
         showNotification();
     } else if (Notification.permission !== "denied") {
@@ -32,17 +32,13 @@ btn.addEventListener("click", () => {
 });
 
 function showNotification() {
-    if (navigator.serviceWorker.controller) {
-        navigator.serviceWorker.ready.then(registration => {
-            registration.showNotification("WormGPT", {
-                body: 'WormGPT: "Siap siap jadi Hacker? kawan 😈"',
-                icon: 'https://rawizaad768.github.io/files/wormgpt.png',
-                requireInteraction: true
-            });
+    navigator.serviceWorker.ready.then(registration => {
+        registration.showNotification("WormGPT", {
+            body: 'WormGPT: "Siap siap jadi Hacker? kawan 😈"',
+            icon: 'https://rawizaad768.github.io/files/wormgpt.png',
+            requireInteraction: true
         });
-    } else {
-        alert('Service Worker belum siap, reload halaman.');
-    }
+    });
 }
 </script>
 </body>
