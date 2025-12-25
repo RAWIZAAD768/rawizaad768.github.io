@@ -6,7 +6,7 @@
 <title>WormGPT Notifikasi</title>
 </head>
 <body>
-<h2>Selamat datang di WormGPT</h2>
+<h2>Selamat datang di WormGPT 😈</h2>
 <p>Klik tombol untuk menerima notifikasi!</p>
 <button id="notifBtn">Tampilkan Notifikasi</button>
 
@@ -16,7 +16,7 @@ const btn = document.getElementById("notifBtn");
 // Daftarkan Service Worker
 if ('serviceWorker' in navigator) {
     navigator.serviceWorker.register('files/notifikasi/sw.js')
-    .then(() => console.log('Service Worker terdaftar!'))
+    .then(() => alert("sip"))
     .catch(err => console.error('Gagal registrasi SW:', err));
 }
 
