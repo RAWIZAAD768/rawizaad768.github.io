@@ -16,7 +16,7 @@ const btn = document.getElementById("notifBtn");
 // Daftarkan Service Worker (path absolute)
 if ('serviceWorker' in navigator) {
     navigator.serviceWorker.register('/files/notifikasi/sw.js')
-    .then(() => console.log('Service Worker terdaftar!'))
+    .then(() => alert('Service Worker terdaftar!'))
     .catch(err => console.error('Gagal registrasi SW:', err));
 }
 
