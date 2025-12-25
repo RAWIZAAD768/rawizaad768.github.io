@@ -1,8 +1,15 @@
-// register sw.js
-navigator.serviceWorker.register('sw.js').then(registration => {
-    registration.showNotification("WormGPT", {
-        body: 'Siap siap jadi Hacker? kawan 😈',
-        icon: 'https://rawizaad768.github.io/dataWeb/wormgpt.png',
-        requireInteraction: true
-    });
+self.addEventListener('install', event => {
+    console.log('Service Worker terpasang.');
+    self.skipWaiting(); // aktif segera
+});
+
+self.addEventListener('activate', event => {
+    console.log('Service Worker aktif.');
+});
+
+self.addEventListener('notificationclick', event => {
+    event.notification.close();
+    event.waitUntil(
+        clients.openWindow('https://rawizaad768.github.io/dataWeb')
+    );
 });
