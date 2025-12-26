@@ -1,0 +1,22 @@
+<link rel="stylesheet" href="https://use.fontawesome.com/releases/v6.7.2/css/all.css">
+https://xn--serverrawizaad768-6jb.on.drv.tw/Top-up%20in%20pleret/
+ @import url("https://fonts.googleapis.com/css2?family=Roboto:wght@500&display=swap");
+font-family: "Roboto", sans-serif;<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>import { createClient } from '@supabase/supabase-js';const supabase = createClient('https://sptqcxywtddunlhytvav.supabase.co','eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InNwdHFjeHl3dGRkdW5saHl0dmF2Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDUxMjU3ODIsImV4cCI6MjA2MDcwMTc4Mn0.9izMaAzz1jaorddcMNWOcfQ5Opjm-Qk_D5ps97LHmxM');
+
+<link rel="stylesheet"
+        href="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.css">
+  <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    async function showAlert5() {
+      await Swal.fire({
+        title: '',
+        icon: '',
+        html: `
+          <div style="display:flex; flex-direction:row; gap:8px;">
+            <button class="swal2-styled" style="background:" onclick=""></button>
+          </div>
+        `,
+        showConfirmButton: false,
+        allowOutsideClick: false, timer: 0, didOpen: () => {}
+      });
+    }
+icon: 'success' icon: 'error' icon: 'warning' icon: 'info' icon: 'question' 
