@@ -5,43 +5,10 @@
      crossorigin="anonymous"></script>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>WormGPT Notifikasi</title>
-</head>
+    <title>RAWIZAAD_768 | Kirim WhatsApp Tanpa Simpan Nomor</title>
+    <link rel="icon" type="image/png" href="icon.png">
+    <meta name="description" content="Alat praktis untuk mengirim chat WhatsApp tanpa harus menyimpan nomor kontak. Cepat, gratis, dan mudah digunakan.">
+    </head>
 <body>
-<h2>Selamat datang di WormGPT</h2>
-<p>Klik tombol untuk menerima notifikasi!</p>
-<button id="notifBtn">Tampilkan Notifikasi</button>
-
-<script>
-const btn = document.getElementById("notifBtn");
-
-// Daftarkan Service Worker (path absolute)
-if ('serviceWorker' in navigator) {
-    navigator.serviceWorker.register('/files/notifikasi/sw.js')
-    .then(() => alert('Service Worker terdaftar!'))
-    .catch(err => console.error('Gagal registrasi SW:', err));
-}
-
-// Tombol klik untuk menampilkan notifikasi
-btn.addEventListener("click", () => {
-    if (Notification.permission === "granted") {
-        showNotification();
-    } else if (Notification.permission !== "denied") {
-        Notification.requestPermission().then(permission => {
-            if (permission === "granted") showNotification();
-        });
-    }
-});
-
-function showNotification() {
-    navigator.serviceWorker.ready.then(registration => {
-        registration.showNotification("RAWIZAAD768", {
-            body: 'Rawizaad: "Siap siap kawan 😈"',
-            icon: 'https://rawizaad768.github.io/files/wormgpt.png',
-            requireInteraction: true
-        });
-    });
-}
-</script>
-</body>
+    </body>
 </html>
