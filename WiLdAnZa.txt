@@ -4,11 +4,13 @@ https://xn--serverrawizaad768-6jb.on.drv.tw/Top-up%20in%20pleret/
 
  @import url("https://fonts.googleapis.com/css2?family=Roboto:wght@500&display=swap");
 
-font-family: "Roboto", sans-serif;<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2">
+font-family: "Roboto", sans-serif;
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 
 import { createClient } from '@supabase/supabase-js';const supabase = 
 
-createClient('https://sptqcxywtddunlhytvav.supabase.co','eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InNwdHFjeHl3dGRkdW5saHl0dmF2Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDUxMjU3ODIsImV4cCI6MjA2MDcwMTc4Mn0.9izMaAzz1jaorddcMNWOcfQ5Opjm-Qk_D5ps97LHmxM');
+createClient('https://iahaqgdgqhbjvwxyxsyo.supabase.co','eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImlhaGFxZ2RncWhianZ3eHl4c3lvIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjE1NzA3NjIsImV4cCI6MjA3NzE0Njc2Mn0.CDTQXFYW2ava66_onCsNHhNZjIThZxZ4tYZqhYlw-hg');
 
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.css">
   
