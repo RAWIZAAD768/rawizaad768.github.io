@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <title>Test Login Google Supabase</title>
+  <script src="https://unpkg.com/@supabase/supabase-js@2"></script>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      padding: 40px;
+    }
+    button {
+      padding: 10px 16px;
+      font-size: 16px;
+      cursor: pointer;
+    }
+    pre {
+      background: #f4f4f4;
+      padding: 10px;
+    }
+  </style>
+</head>
+<body>
+
+  <h2>Test Login Google Supabase</h2>
+
+  <button onclick="loginGoogle()">Login dengan Google</button>
+  <button onclick="logout()">Logout</button>
+
+  <h3>User:</h3>
+  <pre id="user">Belum login</pre>
+
+  <script>
+    // 🔴 GANTI DENGAN PUNYA KAMU
+    const { createClient } = supabase;
+    const SUPABASE_URL = "https://iahaqgdgqhbjvwxyxsyo.supabase.co";
+    const SUPABASE_ANON_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImlhaGFxZ2RncWhianZ3eHl4c3lvIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjE1NzA3NjIsImV4cCI6MjA3NzE0Njc2Mn0.CDTQXFYW2ava66_onCsNHhNZjIThZxZ4tYZqhYlw-hg";
+
+    const base = supabase.createClient(
+      SUPABASE_URL,
+      SUPABASE_ANON_KEY
+    );
+
+    async function loginGoogle() {
+      await base.auth.signInWithOAuth({
+        provider: "google",
+      });
+    }
+
+    async function logout() {
+      await base.auth.signOut();
+      document.getElementById("user").textContent = "Logout";
+    }
+
+    async function checkUser() {
+      const { data: { user } } = await base.auth.getUser();
+      if (user) {
+        document.getElementById("user").textContent =
+          JSON.stringify(user, null, 2);
+      }
+    }
+
+    checkUser();
+  </script>
+
+</body>
+</html>
