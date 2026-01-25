@@ -41,10 +41,13 @@
       SUPABASE_ANON_KEY
     );
 
-    async function loginGoogle() {
+async function loginGoogle() {
       await base.auth.signInWithOAuth({
-        provider: "google",
-      });
+        provider: 'google',
+        options: {
+          redirectTo: 'https://rawizaad768.github.io'
+        }
+      })
     }
 
     async function logout() {
