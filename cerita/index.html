@@ -1,0 +1,298 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="theme-color" content="#05060b">
+<title>AKATSUKI DAYBREAK — Chronicles</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Cinzel:wght@500;600;700;800&family=Inter:wght@400;500;600;700&display=swap');
+
+:root{
+  --bg:#05060b; --bg2:#0a0d16; --text:#e9edf7; --muted:#98a2b8;
+  --line:rgba(255,255,255,.11); --gold:#f5c76b; --cyan:#62e7ff;
+  --green:#6dffb0; --purple:#a98cff; --red:#ff647c;
+  --shadow:0 25px 80px rgba(0,0,0,.45);
+}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{margin:0;background:radial-gradient(circle at 50% 0,#11182a 0,#05060b 42%,#030408 100%);color:var(--text);font-family:Inter,system-ui,sans-serif;line-height:1.8;overflow-x:hidden}
+body.reading .stars{opacity:.15}
+a{color:inherit;text-decoration:none}
+button{font:inherit}
+.stars,.stars:before,.stars:after{position:fixed;inset:0;pointer-events:none;content:"";z-index:-1}
+.stars{opacity:.55;background-image:radial-gradient(circle,#fff 1px,transparent 1px);background-size:83px 83px;animation:drift 35s linear infinite}
+.stars:before{background-image:radial-gradient(circle,#b9d8ff .8px,transparent .8px);background-size:137px 137px;animation:drift 55s linear reverse infinite}
+.stars:after{background:radial-gradient(circle at 50% 15%,rgba(98,231,255,.08),transparent 30%),radial-gradient(circle at 85% 65%,rgba(169,140,255,.07),transparent 30%)}
+@keyframes drift{to{transform:translate3d(40px,80px,0)}}
+
+.progress{position:fixed;top:0;left:0;height:3px;width:0;background:linear-gradient(90deg,var(--cyan),var(--gold));z-index:1000}
+.topbar{position:fixed;top:3px;left:0;right:0;z-index:999;padding:12px 18px;display:flex;justify-content:space-between;align-items:center;background:rgba(5,6,11,.55);backdrop-filter:blur(16px);border-bottom:1px solid transparent;transition:.3s}
+.topbar.scrolled{border-color:var(--line)}
+.brand{font-family:Cinzel,serif;font-weight:700;letter-spacing:2px;font-size:13px}
+.controls{display:flex;gap:8px}
+.ctrl{border:1px solid var(--line);background:rgba(255,255,255,.05);color:#fff;border-radius:999px;padding:7px 11px;cursor:pointer}
+.hero{min-height:100svh;display:grid;place-items:center;text-align:center;padding:100px 22px 70px;position:relative;overflow:hidden}
+.moon{position:absolute;width:min(72vw,560px);height:min(72vw,560px);border-radius:50%;background:radial-gradient(circle at 35% 30%,#fff 0,#dce8ff 15%,#8491aa 48%,#202638 72%,#080a11 73%);box-shadow:0 0 70px rgba(196,220,255,.17),0 0 180px rgba(98,231,255,.08);opacity:.38;filter:blur(.2px)}
+.moon:after{content:"";position:absolute;width:4px;height:115%;background:rgba(8,10,17,.8);left:53%;top:-8%;transform:rotate(24deg);box-shadow:18px 0 30px rgba(0,0,0,.35)}
+.heroContent{position:relative;max-width:950px;z-index:2}
+.kicker{color:var(--gold);letter-spacing:6px;text-transform:uppercase;font-size:11px;font-weight:700}
+h1{font-family:Cinzel,serif;font-size:clamp(40px,9vw,96px);line-height:1.02;margin:18px 0 12px;letter-spacing:3px;text-shadow:0 0 35px rgba(98,231,255,.13)}
+.hero p{max-width:760px;margin:0 auto;color:#c2cadb;font-size:clamp(15px,2vw,19px)}
+.enter{display:inline-flex;margin-top:34px;padding:13px 21px;border:1px solid rgba(245,199,107,.45);border-radius:999px;color:#fff;background:rgba(245,199,107,.08);transition:.3s}
+.enter:hover{transform:translateY(-3px);background:rgba(245,199,107,.15)}
+.scroll{position:absolute;bottom:25px;left:50%;transform:translateX(-50%);color:#778198;font-size:10px;letter-spacing:4px;text-transform:uppercase}
+
+.container{width:min(1060px,calc(100% - 32px));margin:auto}
+.intro{padding:80px 0 45px}
+.quote{font-family:Cinzel,serif;font-size:clamp(23px,4vw,38px);line-height:1.4;text-align:center;margin:0 auto;max-width:850px;color:#f1f3f8}
+.quote span{color:var(--gold)}
+.meta{text-align:center;color:var(--muted);font-size:13px;margin-top:15px}
+
+.chapter{padding:65px 0;scroll-margin-top:70px}
+.arcHeader{display:flex;align-items:end;gap:18px;margin-bottom:30px}
+.arcNum{font-family:Cinzel,serif;color:var(--gold);font-size:13px;letter-spacing:3px}
+.arcHeader h2{font-family:Cinzel,serif;font-size:clamp(28px,5vw,50px);line-height:1.1;margin:5px 0 0}
+.arcHeader p{color:var(--muted);margin:5px 0 0}
+.divider{height:1px;background:linear-gradient(90deg,var(--gold),transparent);margin:25px 0 40px}
+
+.episode{border:1px solid var(--line);background:linear-gradient(145deg,rgba(255,255,255,.045),rgba(255,255,255,.015));border-radius:22px;margin:18px 0;overflow:hidden;box-shadow:0 12px 40px rgba(0,0,0,.15);transition:.35s}
+.episode:hover{border-color:rgba(245,199,107,.3);transform:translateY(-2px)}
+.epHead{padding:22px 24px;cursor:pointer;display:flex;justify-content:space-between;gap:18px;align-items:center}
+.epTitle{font-family:Cinzel,serif;font-size:19px;color:#fff}
+.epTag{font-size:10px;letter-spacing:2px;color:var(--muted);white-space:nowrap}
+.epBody{padding:0 24px 25px;color:#c5ccda;display:block}
+.episode.collapsed .epBody{display:none}
+.episode.collapsed .chev{transform:rotate(-90deg)}
+.chev{transition:.25s;color:var(--gold)}
+.epBody p{margin:12px 0}
+.epBody ul,.epBody ol{padding-left:22px}
+.epBody li{margin:6px 0}
+.power{color:var(--cyan);font-weight:700}
+.twist{border-left:3px solid var(--purple);padding:12px 16px;margin:20px 0;background:rgba(169,140,255,.06);border-radius:0 12px 12px 0}
+.romance{border-left:3px solid #ff7db0;padding:12px 16px;background:rgba(255,125,176,.05);border-radius:0 12px 12px 0}
+.dialogue{font-family:Cinzel,serif;color:#f4d58f;font-size:18px;padding:18px 20px;border-top:1px solid var(--line);border-bottom:1px solid var(--line);margin:20px 0}
+.final{border:1px solid rgba(245,199,107,.3);background:radial-gradient(circle at 50% 0,rgba(245,199,107,.08),transparent 55%);padding:30px;border-radius:22px;text-align:center}
+.final h3{font-family:Cinzel,serif;color:var(--gold);font-size:clamp(22px,4vw,36px);margin:5px 0 15px}
+
+.characters{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin:30px 0 65px}
+.char{padding:20px;border:1px solid var(--line);border-radius:18px;background:rgba(255,255,255,.025)}
+.char b{font-family:Cinzel,serif;display:block;margin-bottom:5px}
+.char small{color:var(--muted)}
+
+.timeline{display:grid;gap:8px;margin:25px 0 50px}
+.tline{display:grid;grid-template-columns:90px 1fr;gap:15px;align-items:center}
+.tline strong{color:var(--gold);font-family:Cinzel,serif}
+.tline div{height:1px;background:var(--line)}
+
+footer{padding:70px 20px 100px;text-align:center;color:#687188;border-top:1px solid var(--line)}
+footer strong{font-family:Cinzel,serif;color:#cbd2e0}
+
+.reveal{opacity:0;transform:translateY(24px);transition:.7s ease}
+.reveal.visible{opacity:1;transform:none}
+@media(max-width:700px){
+ .topbar{padding:10px 12px}.brand{font-size:10px}.ctrl{padding:6px 9px;font-size:12px}
+ .container{width:min(100% - 22px,1060px)}
+ .chapter{padding:45px 0}.arcHeader{display:block}
+ .characters{grid-template-columns:1fr 1fr}
+ .epHead{padding:18px}.epBody{padding:0 18px 20px}
+ .epTag{display:none}
+ .hero{padding-top:90px}
+}
+@media(max-width:430px){.characters{grid-template-columns:1fr}.quote{font-size:23px}}
+</style>
+</head>
+<body>
+<div class="stars"></div><div class="progress" id="progress"></div>
+<header class="topbar" id="topbar">
+  <div class="brand">AKATSUKI DAYBREAK</div>
+  <div class="controls">
+    <button class="ctrl" id="collapseBtn">Lipat</button>
+    <button class="ctrl" id="readBtn">Mode Baca</button>
+  </div>
+</header>
+
+<section class="hero">
+  <div class="moon"></div>
+  <div class="heroContent">
+    <div class="kicker">The Complete Chronicle</div>
+    <h1>AKATSUKI<br>DAYBREAK</h1>
+    <p>Empat sahabat. Empat kekuatan. Cahaya yang lahir dari kegelapan, dan sebuah dunia yang berkali-kali berdiri di ambang kehancuran.</p>
+    <a class="enter" href="#prolog">Mulai Membaca ↓</a>
+  </div>
+  <div class="scroll">Scroll untuk membuka kisah</div>
+</section>
+
+<main class="container">
+<section class="intro reveal" id="prolog">
+  <p class="quote">“Kadang dunia tidak membutuhkan pahlawan yang sempurna.<br><span>Ia hanya membutuhkan mereka yang tetap berdiri.</span>”</p>
+  <p class="meta">Kronik lengkap • Akatsuki Daybreak • Four Kingdoms</p>
+</section>
+
+<section class="chapter reveal">
+  <div class="arcHeader"><div><div class="arcNum">PROLOG</div><h2>Empat Sahabat, Satu Fajar</h2><p>Dunia 1.000 tahun setelah era Naruto.</p></div></div>
+  <div class="divider"></div>
+  <p>Bulan purnama retak. Dari retakan itu, kekuatan Otsutsuki mulai bergerak untuk mengambil alih dunia melalui sebuah ritual bulan.</p>
+  <p>Di tengah ancaman tersebut berdiri empat sahabat yang kemudian dikenal sebagai <b>Akatsuki Daybreak</b>.</p>
+  <div class="characters">
+    <div class="char"><b>WILDAN</b><small>Petir & listrik • Pemimpin</small></div>
+    <div class="char"><b>RAFA</b><small>Pedang petir • Pendekar</small></div>
+    <div class="char"><b>DYAS</b><small>Cahaya • Pedang cahaya</small></div>
+    <div class="char"><b>SOFYAN</b><small>Angin • Penjaga langit</small></div>
+  </div>
+</section>
+
+<section class="chapter reveal" id="season1">
+<div class="arcHeader"><div><div class="arcNum">SEASON 1 • BAGIAN I</div><h2>Akatsuki Daybreak</h2><p>Fajar pertama dimulai di bawah bulan yang retak.</p></div></div><div class="divider"></div>
+
+<div class="episode"><div class="epHead"><div><span class="epTag">EPISODE 01</span><div class="epTitle">Fajar di Bawah Bulan Retak</div></div><span class="chev">⌄</span></div><div class="epBody">
+<p>Malam purnama pertama setelah sepuluh tahun tiba. Wildan, Rafa, Dyas, dan Sofyan menerima jubah Akatsuki hitam dengan awan merah.</p>
+<p>Zetsu Putih turun dari bulan retak seperti hujan. Sofyan membangkitkan <span class="power">Tempest Wings</span> dan menyelamatkan desa. Dyas mencabut pedang cahaya untuk pertama kalinya dan menebas 100 Zetsu sekaligus. Wildan memimpin dengan kekuatan petir.</p>
+<div class="twist"><b>Plot Twist:</b> Ayaka APHP, Putri Kuil Bulan, turun dari cahaya bulan dan memanggil Wildan, “Kakak... akhirnya aku ketemu.” Wildan kehilangan ingatan selama delapan tahun dan ternyata merupakan kakak angkat Ayaka.</div>
+</div></div>
+
+<div class="episode"><div class="epHead"><div><span class="epTag">EPISODE 02</span><div class="epTitle">Rantai Listrik & Tebasan Cahaya</div></div><span class="chev">⌄</span></div><div class="epBody">
+<p>Nandayo, pengguna bayangan, masuk ke bayangan Rafa dan membuatnya menyerang Wildan sambil mengingat kematian orang tuanya.</p>
+<p>Wildan tidak tega menyerang Rafa. Dyas menancapkan pedangnya ke tanah dan menciptakan <span class="power">Arena Cahaya — Daybreak Prison</span>. Wildan menggunakan listrik untuk menyadarkan Rafa.</p>
+<div class="twist">Nandayo mengungkap bahwa yang mereka kurung bukan dirinya, melainkan <b>ingatan Wildan</b>. Ingatan Wildan yang hilang disimpan Nandayo di dalam bayangannya.</div>
+</div></div>
+
+<div class="episode"><div class="epHead"><div><span class="epTag">EPISODE 03</span><div class="epTitle">Hantaman di Langit Purnama</div></div><span class="chev">⌄</span></div><div class="epBody">
+<p>Kaguya mengumumkan ritual yang akan dilakukan tiga hari lagi. Nandayo berusaha menculik Ayaka. Sofyan mengejarnya ke langit malam.</p>
+<p>Dyas membelah dimensi agar Nandayo tidak dapat berteleportasi. Sofyan menghantamnya dengan <span class="power">Fuuton Midori Rasengan</span>, sementara Rafa mengikat kakinya dengan rantai listrik.</p>
+<p>Nandayo kalah, tetapi berbisik bahwa Kaguya membutuhkan Ayaka untuk ritual — <b>bukan untuk dibunuh.</b></p>
+<div class="romance">Di markas, Ayaka merawat luka Wildan. Wildan mencium kening Ayaka untuk pertama kalinya.</div>
+</div></div>
+
+<div class="episode"><div class="epHead"><div><span class="epTag">EPISODE 04</span><div class="epTitle">Pedang yang Membelah Bulan & Kutukan Petir</div></div><span class="chev">⌄</span></div><div class="epBody">
+<p>Kaguya menculik Ayaka ke Istana Bayangan di balik bulan. Kutukan Otsutsuki Wildan aktif dan petirnya berubah hitam.</p>
+<p>Dyas datang dan menebas gerbang Istana Bayangan sekaligus bulan palsu.</p>
+<div class="dialogue">“Cahaya tidak pernah kalah. Bayangan hanya ada karena cahaya mengizinkan.”</div>
+<p>Di dalam istana terungkap bahwa Kaguya adalah ibu kandung Ayaka sekaligus ibu angkat Wildan. Ayaka akan mati pada usia 17 tahun saat purnama sempurna. Kaguya bermaksud mengorbankan dirinya untuk menyelamatkan Ayaka. Wildan menjadi kunci ritual karena darah setengah Otsutsukinya.</p>
+</div></div>
+
+<div class="episode"><div class="epHead"><div><span class="epTag">EPISODE 05 • FINAL</span><div class="epTitle">DAYBREAK CANNON</div></div><span class="chev">⌄</span></div><div class="epBody">
+<p>Ritual dimulai. Nandayo mengkhianati Kaguya, menikamnya dari belakang, lalu menyerap kekuatannya menjadi Monster Bayangan Indigo Raksasa.</p>
+<ol><li>Dyas membelah monster dengan <span class="power">Daybreak Excalibur — Final Dawn Slash</span>.</li><li>Sofyan menghantam jantung monster dengan dua Rasengan hijau.</li><li>Rafa mengikat pecahannya dengan rantai listrik.</li><li>Ayaka membangkitkan <span class="power">Kunci Matahari</span>.</li><li>Ayaka dan Wildan menciptakan <span class="power">Petir Matahari</span>.</li><li>Wildan menembakkan <span class="power">Daybreak Cannon</span>.</li></ol>
+<p>Monster dan bulan palsu dihancurkan. Kaguya selamat sebagai manusia biasa. Wildan dan Ayaka resmi bersama.</p>
+</div></div>
+</section>
+
+<section class="chapter reveal">
+<div class="arcHeader"><div><div class="arcNum">SEASON 1 • BAGIAN II</div><h2>Shibai & Fajar Pertama</h2><p>Ancaman baru muncul dari bayangan bulan.</p></div></div><div class="divider"></div>
+
+<div class="episode"><div class="epHead"><div><span class="epTag">EPISODE 08</span><div class="epTitle">Wadah Petir Hitam</div></div><span class="chev">⌄</span></div><div class="epBody"><p>Wildan hampir kerasukan Shibai. Ayaka mengunci Wildan dengan kekuatan matahari tetapi pingsan. Sofyan membawa Ayaka ke Kuil Bulan. Rafa menghadapi Raiken. Dyas memotong benang kontrol Shibai menggunakan serpihan cahaya. Raiken bebas sesaat dan meminta Rafa membunuhnya sebelum kembali dikendalikan.</p></div></div>
+
+<div class="episode"><div class="epHead"><div><span class="epTag">EPISODE 09–10</span><div class="epTitle">Latihan Daybreak</div></div><span class="chev">⌄</span></div><div class="epBody"><p>Time-skip enam hari. Wildan dan Ayaka berlatih mengubah petir hitam menjadi petir matahari. Sofyan berlatih terbang di badai dimensi. Dyas dan Rafa menempa <span class="power">Pedang Kembar Volt-Excalibur</span>, yang menghasilkan teknik <span class="power">Cross Slash — Salib Fajar</span> untuk memotong ingatan yang dicuci otak.</p></div></div>
+
+<div class="episode"><div class="epHead"><div><span class="epTag">EPISODE 11</span><div class="epTitle">Puncak Bulan</div></div><span class="chev">⌄</span></div><div class="epBody"><p>Sofyan membawa seluruh tim ke bulan retak. Di puncak terdapat tahta Shibai dari tulang Otsutsuki. Raiken berdiri di sampingnya sebagai patung listrik putih.</p></div></div>
+
+<div class="episode"><div class="epHead"><div><span class="epTag">EPISODE 12</span><div class="epTitle">Dua Saudara Listrik</div></div><span class="chev">⌄</span></div><div class="epBody"><p>Rafa melawan Raiken dengan tinju dan kenangan masa kecil. Terungkap Raiken sebenarnya memilih Shibai karena dijanjikan kehidupan untuk Rafa. Rafa menolak. Dengan bantuan Dyas, Rafa memutus kontrol di jantung Raiken dan membebaskannya.</p></div></div>
+
+<div class="episode"><div class="epHead"><div><span class="epTag">EPISODE 13–15</span><div class="epTitle">Shibai Bangkit</div></div><span class="chev">⌄</span></div><div class="epBody"><p>Shibai ternyata adalah bayangan bulan itu sendiri. Ia menyerap Raiken dan Rafa. Serangan tim tidak mampu melukainya. Kaguya mengungkap bahwa Shibai takut pada matahari terbit pertama karena ia lahir dari malam abadi.</p></div></div>
+
+<div class="episode"><div class="epHead"><div><span class="epTag">EPISODE 16</span><div class="epTitle">Cinta APHP</div></div><span class="chev">⌄</span></div><div class="epBody"><p>Ayaka bangkit dan terungkap sebagai <b>matahari itu sendiri</b>. Untuk menjadi matahari, ia harus mati. Wildan melamarnya di tengah perang menggunakan cincin petir.</p><div class="dialogue">“Kalau aku jadi matahari, aku akan selalu lihat kamu tiap pagi.”</div><p>Ayaka terbang ke langit.</p></div></div>
+
+<div class="episode"><div class="epHead"><div><span class="epTag">EPISODE 17–18</span><div class="epTitle">Trinity Volt Excalibur</div></div><span class="chev">⌄</span></div><div class="epBody"><p>Shibai menjadi gerhana raksasa. Dyas, Rafa, dan Raiken menciptakan <span class="power">TRINITY VOLT EXCALIBUR — TIGA PETIR SATU CAHAYA</span>. Sofyan membawa mereka terbang. Tebasan mereka tidak membelah Shibai, tetapi membelah malam menjadi siang.</p></div></div>
+
+<div class="episode"><div class="epHead"><div><span class="epTag">EPISODE 19–20</span><div class="epTitle">Angin Penyelamat</div></div><span class="chev">⌄</span></div><div class="epBody"><p>Sofyan menyebarkan cahaya dan oksigen ke bulan sambil membawa Ayaka yang telah menjadi bola matahari kecil. Wildan menggunakan petir matahari untuk menarik Zetsu Putih menuju cahaya.</p></div></div>
+
+<div class="episode"><div class="epHead"><div><span class="epTag">EPISODE 21–22</span><div class="epTitle">Wildan vs Wadah</div></div><span class="chev">⌄</span></div><div class="epBody"><p>Shibai mencoba masuk tubuh Wildan. Wildan sengaja membiarkannya, kemudian mengunci Shibai dengan segel petir hitam.</p><div class="dialogue">“Kalau kau mau wadah, aku akan jadi penjara abadi untukmu.”</div><p>Wildan hampir mati.</p></div></div>
+
+<div class="episode"><div class="epHead"><div><span class="epTag">EPISODE 23</span><div class="epTitle">Pedang Terakhir Dyas</div></div><span class="chev">⌄</span></div><div class="epBody"><p>Dyas menghancurkan pedang cahaya kembarnya dan menggunakan pecahannya untuk memberikan cahaya abadi ke tubuh Wildan. Wildan dapat menahan Shibai, tetapi Dyas kehilangan kekuatannya dan menjadi manusia biasa.</p></div></div>
+
+<div class="episode"><div class="epHead"><div><span class="epTag">EPISODE 24</span><div class="epTitle">Fajar Pertama</div></div><span class="chev">⌄</span></div><div class="epBody"><p>Ayaka yang telah menjadi matahari turun dan memeluk Wildan. Cahaya Ayaka, cahaya Dyas, listrik Rafa, listrik Raiken, dan angin Sofyan menyatu. Shibai meledak dari dalam tubuh Wildan.</p></div></div>
+
+<div class="episode"><div class="epHead"><div><span class="epTag">EPISODE 25</span><div class="epTitle">Akatsuki Daybreak — Nama Baru</div></div><span class="chev">⌄</span></div><div class="epBody"><p>Shibai mati menjadi debu bintang. Bulan retak sembuh. Ayaka kembali sebagai manusia dengan rambut emas. Mata Wildan menjadi emas. Raiken menjadi anggota kelima. Dyas menerima pedang kayu dari Kaguya.</p></div></div>
+
+<div class="episode"><div class="epHead"><div><span class="epTag">EPISODE 26</span><div class="epTitle">Janji di Bawah Purnama</div></div><span class="chev">⌄</span></div><div class="epBody"><p>Dua tahun kemudian, Akatsuki menjadi legenda baik. Wildan dan Ayaka menikah. Rafa dan Raiken membuka bengkel listrik. Dyas menjadi guru pedang. Sofyan menjaga langit.</p><div class="dialogue">“Jangan lupa pulang.”</div><p>Post-credit: sembilan tahta Otsutsuki lainnya menyala.</p></div></div>
+</section>
+
+<section class="chapter reveal" id="season2">
+<div class="arcHeader"><div><div class="arcNum">SEASON 2</div><h2>Echoes of the Void</h2><p>The Shadow Council.</p></div></div><div class="divider"></div>
+
+<div class="episode"><div class="epHead"><div><span class="epTag">EPISODE 01–06</span><div class="epTitle">Kebangkitan Bayangan</div></div><span class="chev">⌄</span></div><div class="epBody"><p>Dua tahun setelah Shibai kalah, Sofyan menemukan anomali energi hitam. Muncul <b>The Void Syndicate</b>, kelompok mantan wadah eksperimen Otsutsuki yang mengincar sisa kekuatan Shibai di tubuh Wildan.</p><p>Rafa dan Raiken mempertahankan bengkel. Dyas, kini hanya dengan pedang kayu, tetap mampu bertarung. Akatsuki berkumpul dan menyadari ancaman itu berhubungan dengan sembilan tahta Otsutsuki.</p></div></div>
+
+<div class="episode"><div class="epHead"><div><span class="epTag">EPISODE 07–13</span><div class="epTitle">Ekspedisi Dimensi Luar</div></div><span class="chev">⌄</span></div><div class="epBody"><p>Sofyan memimpin Pasukan Langit menuju Galaksi Ketiga. Mereka menemukan planet reruntuhan dan cermin memori tentang sembilan tahta. Saat Sofyan berada di luar angkasa, Void Syndicate menculik Ayaka. Wildan menyerbu markas mereka. Sofyan mengirim sinyal bahwa pemimpin sindikat dikendalikan salah satu entitas dari sembilan tahta. Ia kembali dan Akatsuki bersatu.</p></div></div>
+
+<div class="episode"><div class="epHead"><div><span class="epTag">EPISODE 14–20</span><div class="epTitle">Perang Faksi Gelap & Bumi</div></div><span class="chev">⌄</span></div><div class="epBody"><p>Void Syndicate menyerang kota-kota besar menggunakan monster dari DNA Otsutsuki. Rafa dan Raiken berada di garis depan. Dyas menghadapi mantan muridnya. Ayaka maju bertarung. Wildan dan Ayaka menghadapi pemimpin sindikat. Sofyan menahan inti bulan yang jatuh dari atmosfer.</p><p>Seluruh anggota Akatsuki menggabungkan kekuatan. Markas dan pemimpin Void Syndicate akhirnya hancur.</p></div></div>
+
+<div class="episode"><div class="epHead"><div><span class="epTag">EPISODE 21–26</span><div class="epTitle">Eksplorasi Tiada Akhir</div></div><span class="chev">⌄</span></div><div class="epBody"><p>Dunia pulih. Rafa dan Raiken membangun akademi teknologi. Dyas menjadi pengelana damai. Sofyan menjadi Komandan Tertinggi Pasukan Eksplorasi Langit dan membangun mercusuar kosmik.</p><div class="dialogue">“Bumi aman di bawah kalian, jagalah fajar ini. Aku akan terus terbang lebih jauh.”</div><p>Post-credit: Tahta Kedua dari sembilan tahta kosong retak. Sosok berambut perak membuka mata dan berkata, “Wadah di bumi sudah kuat... saatnya sang Pencipta turun tangan.”</p></div></div>
+</section>
+
+<section class="chapter reveal" id="movie">
+<div class="arcHeader"><div><div class="arcNum">THE MOVIE</div><h2>Echo of the Four Kingdoms</h2><p>Ketika empat jantung bumi menjadi target seorang pemakan bintang.</p></div></div><div class="divider"></div>
+<p>Bumi memiliki empat jantung dan empat kerajaan: <b>Kazangu</b> (Api), <b>Naeris</b> (Air), <b>Ghael</b> (Tanah), dan <b>Vayra</b> (Angin). Di setiap kerajaan terdapat Inti Elemental.</p>
+<p>Datanglah <b>Nezarkos, The Star Devourer</b> — alien setinggi empat meter dengan armor meteor hidup dan enam mata. Ia bukan meteor. Ia adalah lubang gravitasi yang berjalan.</p>
+
+<div class="episode"><div class="epHead"><div><span class="epTag">FIGHT 1 • MENIT 0–15</span><div class="epTitle">Jatuhnya Kazangu — Dyas vs Masa Lalu</div></div><span class="chev">⌄</span></div><div class="epBody"><p>Kazangu diserang. Raja Kazangu, ayah angkat Dyas, maju tetapi dihancurkan gravitasi. Inti Api diserap Nezarkos.</p><p>Dyas kembali ke Kazangu. Pedang api warisan ayahnya meleleh di dekat Nezarkos. Ia mematahkannya dan dari pecahan itu lahir cahaya putih murni: <span class="power">Kazangu Legacy: Photon Blade</span>.</p><p>Dyas berhasil membelah armor Nezarkos, tetapi terkena ledakan supernova mini dan terpental keluar atmosfer. Ia sadar cahaya adalah satu-satunya yang tidak dapat dimakan gravitasi.</p></div></div>
+
+<div class="episode"><div class="epHead"><div><span class="epTag">FIGHT 2 • MENIT 15–35</span><div class="epTitle">Badai di Naeris — Sofyan & Wildan</div></div><span class="chev">⌄</span></div><div class="epBody"><p>Nezarkos turun ke kota Naeris di dasar laut. Wildan menciptakan <span class="power">Thunder Dome — 100 Juta Volt</span>. Sofyan menciptakan <span class="power">Eye of the Storm</span>, mengangkat air laut menjadi tornado air setinggi lima kilometer.</p><p>Wildan menggabungkan listrik dengan tornado itu menjadi <span class="power">Storm Emperor's Spear</span>. Serangan menembus dada Nezarkos dan membuat inti-intinya korslet. Nezarkos membalas dengan ledakan uap dan api.</p></div></div>
+
+<div class="episode"><div class="epHead"><div><span class="epTag">FIGHT 3 • MENIT 35–55</span><div class="epTitle">Pertahanan Ghael — Rafa Sang Pendekar Petir</div></div><span class="chev">⌄</span></div><div class="epBody"><p>Rafa berdiri sendirian di gerbang Ghael. Ia menggunakan <span class="power">Lightning Draw</span> dan <span class="power">Thunder Chain</span> melawan 10.000 golem gravitasi.</p><p>Setelah tujuh hari, Nezarkos datang. Rafa menggunakan <span class="power">Final Form: Heavenly Thunder Pillar</span> untuk menghancurkan gunung besi yang dijatuhkan kepadanya. Ia tetap berdiri meski tubuhnya hangus dan pedangnya patah setengah. Nezarkos mengambil Inti Tanah.</p></div></div>
+
+<div class="episode"><div class="epHead"><div><span class="epTag">FIGHT 4 • MENIT 55–70</span><div class="epTitle">Invasi Cahaya — Dyas di Kapal Induk</div></div><span class="chev">⌄</span></div><div class="epBody"><p>Dyas menyerang kapal induk Nezarkos di orbit. Di tempat yang sepenuhnya gelap, pedang cahaya Dyas menjadi satu-satunya sumber cahaya.</p><p>Ia menemukan Inti Api asli dan menanam <span class="power">Nova Core: Daylight Bomb</span>. Kapal induk meledak seperti matahari kedua. Ledakan itu melukai Nezarkos dan membuat tiga intinya semakin tidak stabil.</p></div></div>
+
+<div class="episode"><div class="epHead"><div><span class="epTag">FIGHT 5 • MENIT 70–90</span><div class="epTitle">Skyfall Vayra — Awakening</div></div><span class="chev">⌄</span></div><div class="epBody"><p>Nezarkos menyerang Vayra dan membuat pulau-pulau melayang jatuh. Wildan, Rafa, Sofyan, dan Dyas dikumpulkan di pulau terakhir. Nezarkos menggunakan <span class="power">Trinity Gravity Devour</span> untuk menarik kekuatan mereka.</p><p>Sofyan melihat rumah ibunya dengan lampu kecil yang masih menyala. Ia rindu. Ia melepaskan seluruh penahan anginnya. Inti Angin bangkit.</p></div></div>
+
+<div class="final">
+<h3>THE FOUR AWAKENINGS</h3>
+<p><b>Sofyan — Vayra Storm Sovereign</b><br>Menjadi badai hidup dengan sayap angin transparan.</p>
+<p><b>Rafa — Ghael Thunder God</b><br>Pedang petir menyatu dengan tubuhnya; ia menjadi petir hidup.</p>
+<p><b>Wildan — Naeris Lightning Monarch</b><br>Menjadi manusia listrik murni dengan satu miliar volt.</p>
+<p><b>Dyas — Kazangu Light Seraph</b><br>Pedang cahaya menjadi 10 meter, enam sayap muncul, dan dadanya menjadi matahari putih.</p>
+</div>
+
+<div class="episode"><div class="epHead"><div><span class="epTag">FINAL BATTLE</span><div class="epTitle">Helios Annihilation Cannon</div></div><span class="chev">⌄</span></div><div class="epBody"><p>Rafa menggunakan <span class="power">Thunder God: Infinite Lightning Slash</span>. Wildan menggunakan <span class="power">Lightning Monarch: World Wide Thunderstorm</span>. Sofyan menggunakan <span class="power">Storm Sovereign: Vacuum Annihilation</span>. Dyas menggunakan <span class="power">Seraph: Photon Judgement</span>.</p><p>Nezarkos sekarat tetapi menggabungkan tiga inti retak menjadi <span class="power">Trinity Annihilation Star</span>, bola hitam sebesar pulau.</p><p>Dyas terbang paling tinggi, membuka enam sayapnya dan berkata:</p><div class="dialogue">“KASIH GUE SEMUANYA!”</div><p>Sofyan, Rafa, dan Wildan menyalurkan seluruh energi mereka kepada Dyas. Wujud dewa mereka hilang dan mereka kembali menjadi manusia pingsan. Matahari di dada Dyas membesar sebesar bulan.</p><div class="dialogue">“Kau makan tiga kerajaan, sekarang coba telan matahari ini.”</div><p>Dyas menembakkan <span class="power">JUDGEMENT OF THE FALLEN STAR — HELIOS ANNIHILATION CANNON</span>. Pilar cahaya kolosal membawa petir Rafa, listrik Wildan, dan angin Sofyan. Sofyan memasukkan Inti Angin ke dalam pilar tersebut.</p><p>Tameng gravitasi Nezarkos retak. Tiga inti pecah. Armor hidup terkelupas, enam matanya pecah, dan Nezarkos terdorong keluar atmosfer hingga berubah menjadi debu cahaya.</p></div></div>
+</section>
+
+<section class="chapter reveal">
+<div class="arcHeader"><div><div class="arcNum">EPILOG</div><h2>Penjaga Dunia</h2><p>Satu bulan setelah pertempuran terakhir.</p></div></div><div class="divider"></div>
+<p>Empat kerajaan mulai bangkit bersama. Di tengah Vayra dibangun patung empat anggota Akatsuki dengan jubah yang telah robek.</p>
+<div class="final">
+<p>Sofyan dengan pusaran angin di tangan.<br>Dyas dengan pedang cahaya berasap.<br>Rafa dengan pedang petir retak.<br>Wildan dengan listrik mengalir di kaki.</p>
+<h3>“DIANGGAP ANGGOTA TERLEMAH,<br>TERNYATA PENJAGA DUNIA.”</h3>
+<p>Empat Inti Elemental melayang bersama di atas patung.</p>
+<p>Cahaya hijau kecil masih menyala di dada Sofyan. Pedang petir Rafa masih berderak. Listrik Wildan masih menyambar kecil. Dan pedang cahaya Dyas masih menyala redup.</p>
+</div>
+</section>
+</main>
+
+<footer><strong>AKATSUKI DAYBREAK</strong><br>End of the current chronicle.<br><br>© The Daybreak Chronicles</footer>
+
+<script>
+const progress=document.getElementById('progress');
+const topbar=document.getElementById('topbar');
+window.addEventListener('scroll',()=>{
+  const h=document.documentElement.scrollHeight-innerHeight;
+  progress.style.width=(scrollY/Math.max(h,1)*100)+'%';
+  topbar.classList.toggle('scrolled',scrollY>20);
+},{passive:true});
+
+document.querySelectorAll('.epHead').forEach(h=>{
+  h.addEventListener('click',()=>h.parentElement.classList.toggle('collapsed'));
+});
+
+let collapsed=false;
+document.getElementById('collapseBtn').onclick=()=>{
+  collapsed=!collapsed;
+  document.querySelectorAll('.episode').forEach(e=>e.classList.toggle('collapsed',collapsed));
+  document.getElementById('collapseBtn').textContent=collapsed?'Buka':'Lipat';
+};
+
+document.getElementById('readBtn').onclick=()=>{
+  document.body.classList.toggle('reading');
+  document.getElementById('readBtn').textContent=document.body.classList.contains('reading')?'Mode Normal':'Mode Baca';
+};
+
+const obs=new IntersectionObserver(entries=>{
+  entries.forEach(e=>{if(e.isIntersecting)e.target.classList.add('visible')});
+},{threshold:.08});
+document.querySelectorAll('.reveal').forEach(x=>obs.observe(x));
+
+document.querySelectorAll('.episode').forEach((e,i)=>{
+  if(i>0) e.classList.add('collapsed');
+});
+</script>
+</body>
+</html>
