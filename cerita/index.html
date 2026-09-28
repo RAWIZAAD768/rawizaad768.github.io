@@ -379,6 +379,38 @@ button { cursor: pointer; }
 .space-078 { margin-top: 78px; }
 .space-079 { margin-top: 79px; }
 .space-080 { margin-top: 80px; }
+
+/* ==========================================================================
+   TAMBAHAN GAYA KHUSUS UNTUK PROLOG & KARAKTER (TIDAK MERUSAK CSS LAMA)
+   ========================================================================== */
+.intro { max-width: 900px; margin: 40px auto 30px; padding: 0 20px; text-align: center; }
+.intro .quote { font-size: clamp(20px, 4vw, 28px); font-weight: 300; font-style: italic; color: #fff; line-height: 1.4; margin-bottom: 12px; }
+.intro .quote span { color: var(--red2); font-weight: 700; }
+.intro .meta { font-size: 11px; color: var(--muted); letter-spacing: 0.2em; text-transform: uppercase; font-weight: 800; }
+
+.chapter.reveal { max-width: 900px; margin: 0 auto 60px; padding: 40px; background: var(--panel2); border-radius: var(--radius); border: 1px solid var(--line); box-shadow: var(--shadow); position: relative; overflow: hidden; }
+.chapter.reveal::before { content: ""; position: absolute; width: 250px; height: 250px; border-radius: 50%; background: rgba(229,9,47,.04); filter: blur(30px); left: -100px; top: -100px; pointer-events: none; }
+.arcHeader { display: flex; flex-direction: column; align-items: center; text-align: center; margin-bottom: 15px; position: relative; z-index: 2; }
+.arcNum { font-size: 12px; color: var(--red2); font-weight: 900; letter-spacing: 0.25em; margin-bottom: 10px; text-transform: uppercase; }
+.arcHeader h2 { margin: 0 0 6px; font-size: clamp(26px, 5vw, 36px); letter-spacing: -0.04em; font-weight: 900; }
+.arcHeader p { color: var(--muted); font-size: 15px; margin: 0; }
+
+.chapter .divider { height: 1px; background: linear-gradient(90deg, transparent, var(--red), transparent); margin: 28px 0; opacity: 0.5; }
+.chapter.reveal > p { color: #e4e4e7; font-size: 16px; margin: 0 0 16px; text-align: center; line-height: 1.8; position: relative; z-index: 2; }
+.chapter.reveal > p:last-of-type { margin-bottom: 0; }
+.chapter.reveal b { color: #fff; }
+
+.characters { display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 16px; margin-top: 35px; position: relative; z-index: 2; }
+.char { background: rgba(0,0,0,0.5); border: 1px solid var(--line); padding: 18px 12px; border-radius: 16px; text-align: center; transition: 0.2s ease; }
+.char:hover { border-color: rgba(229,9,47,0.45); transform: translateY(-4px); background: rgba(229,9,47,0.06); }
+.char b { display: block; color: #fff; font-size: 15px; font-weight: 900; letter-spacing: 0.08em; margin-bottom: 4px; }
+.char small { display: block; color: var(--red2); font-size: 11px; font-weight: 700; letter-spacing: 0.05em; opacity: 0.9; }
+
+@media (max-width: 600px) {
+  .chapter.reveal { padding: 30px 20px; margin: 0 16px 40px; border-radius: 20px; }
+  .characters { grid-template-columns: repeat(2, 1fr); gap: 12px; }
+  .char { padding: 14px 10px; }
+}
 </style>
 </head>
 <body>
@@ -414,6 +446,36 @@ button { cursor: pointer; }
         <button class="secondary" id="muteBtn" disabled>🔇 Mute aktif</button>
       </div>
     </section>
+
+    <!-- ========================================================== -->
+    <!-- KOMPONEN TAMBAHAN: PROLOG & KARAKTER (DISISIPKAN DI SINI) -->
+    <!-- ========================================================== -->
+    <section class="intro reveal" id="prolog">
+      <p class="quote">“Kadang dunia tidak membutuhkan pahlawan yang sempurna.<br><span>Ia hanya membutuhkan mereka yang tetap berdiri.</span>”</p>
+      <p class="meta">Kronik lengkap • Akatsuki Daybreak • Four Kingdoms</p>
+    </section>
+
+    <section class="chapter reveal">
+      <div class="arcHeader">
+        <div>
+          <div class="arcNum">PROLOG</div>
+          <h2>Empat Sahabat, Satu Fajar</h2>
+          <p>Dunia 1.000 tahun setelah era Naruto.</p>
+        </div>
+      </div>
+      <div class="divider"></div>
+      <p>Bulan purnama retak. Dari retakan itu, kekuatan Otsutsuki mulai bergerak untuk mengambil alih dunia melalui sebuah ritual bulan.</p>
+      <p>Di tengah ancaman tersebut berdiri empat sahabat yang kemudian dikenal sebagai <b>Akatsuki Daybreak</b>.</p>
+      <div class="characters">
+        <div class="char"><b>WILDAN</b><small>Petir & listrik • Pemimpin</small></div>
+        <div class="char"><b>RAFA</b><small>Pedang petir • Pendekar</small></div>
+        <div class="char"><b>DYAS</b><small>Cahaya • Pedang cahaya</small></div>
+        <div class="char"><b>SOFYAN</b><small>Angin • Penjaga langit</small></div>
+      </div>
+    </section>
+    <!-- ========================================================== -->
+    <!-- AKHIR KOMPONEN TAMBAHAN -->
+    <!-- ========================================================== -->
 
     <section class="section" id="story">
       <div class="section-head">
@@ -878,10 +940,8 @@ Epilog damai: Semua anggota Akatsuki tersenyum menatap langit malam yang tenang.
 </div>
 
 <script>
-const $ = (s, root=document) => root.querySelector(s);
-const $$ = (s, root=document) => [...root.querySelectorAll(s)];
-const cards = $$('.story-card');
-const navItems = $$('.nav-item');
+const $ = (s, root=document) => root.querySelector(s); const $$ = (s, root=document) => [...root.querySelectorAll(s)];
+const cards = $$('.story-card'); const navItems = $$('.nav-item');
 const search = $('#search');
 const empty = $('#empty');
 const countLabel = $('#countLabel');
@@ -926,9 +986,8 @@ function applyFilter() {
 }
 
 search.addEventListener('input', applyFilter);
-$$('.filter').forEach(btn => btn.addEventListener('click', () => {
-  activeFilter = btn.dataset.filter;
-  $$('.filter').forEach(b => b.classList.remove('active'));
+$$('.filter').forEach(btn => btn.addEventListener('click', () => {   activeFilter = btn.dataset.filter;   $$
+('.filter').forEach(b => b.classList.remove('active'));
   btn.classList.add('active');
   applyFilter();
 }));
@@ -978,12 +1037,7 @@ function makeFocus(card) {
   const clone = card.cloneNode(true);
   clone.querySelectorAll('.chapter-actions').forEach(x => x.remove());
   $('#focusContent').replaceChildren(clone);
-  $('#focusOverlay').classList.add('open');
-  document.body.classList.add('no-scroll');
-}
-
-$$('.focus-btn').forEach(btn => btn.addEventListener('click', () => makeFocus(document.getElementById(btn.dataset.focus))));
-$('#focusClose').addEventListener('click', () => {
+  $('#focusOverlay').classList.add('open');   document.body.classList.add('no-scroll'); }  $$('.focus-btn').forEach(btn => btn.addEventListener('click', () => makeFocus(document.getElementById(btn.dataset.focus))));$('#focusClose').addEventListener('click', () => {
   $('#focusOverlay').classList.remove('open');
   document.body.classList.remove('no-scroll');
 });
@@ -991,11 +1045,7 @@ $('#focusOverlay').addEventListener('click', e => { if (e.target.id === 'focusOv
 $('#focusAllBtn').addEventListener('click', () => makeFocus(cards[0]));
 
 document.addEventListener('keydown', e => {
-  if (e.key === 'Escape') $('#focusClose').click();
-  if (e.key === '/' && document.activeElement !== search) { e.preventDefault(); search.focus(); }
-});
-
-$$('.copy-btn').forEach(btn => btn.addEventListener('click', async () => {
+  if (e.key === 'Escape') $('#focusClose').click();   if (e.key === '/' && document.activeElement !== search) { e.preventDefault(); search.focus(); } });  $$('.copy-btn').forEach(btn => btn.addEventListener('click', async () => {
   const card = document.getElementById(btn.dataset.copy);
   const text = card.innerText.replace(/Salin bagian\nFokus bagian/g, '').trim();
   try {
