@@ -1,674 +1,1061 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="id">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<meta name="theme-color" content="#090909">
-<meta name="description" content="Akatsuki The Movie: Echo of the Four Kingdoms — kisah empat penjaga dunia menghadapi Nezarkos, The Star Devourer.">
-<title>AKATSUKI THE MOVIE — Echo of the Four Kingdoms</title>
-
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="theme-color" content="#050505">
+<meta name="description" content="Akatsuki Daybreak — arsip cerita interaktif Season 1, Season 2, dan The Movie: Echo of the Four Kingdoms.">
+<title>AKATSUKI DAYBREAK — The Complete Story</title>
 <style>
-:root{
-  --bg:#050505;
-  --bg2:#0b0b10;
-  --red:#b20d18;
-  --red2:#e21a2d;
-  --orange:#ff9d2e;
-  --gold:#ffd56a;
-  --blue:#4fc8ff;
-  --cyan:#62fff2;
-  --green:#63e88b;
-  --purple:#a47cff;
-  --white:#f7f7f2;
-  --muted:#aaa7a2;
-  --card:rgba(15,15,18,.78);
-  --line:rgba(255,255,255,.12);
-  --shadow:0 24px 70px rgba(0,0,0,.55);
+:root {
+  color-scheme: dark;
+  --bg: #050505;
+  --bg2: #0a0a0b;
+  --panel: #0f1012;
+  --panel2: #141519;
+  --text: #f4f4f5;
+  --muted: #9b9ca3;
+  --line: rgba(255,255,255,.10);
+  --red: #e5092f;
+  --red2: #ff3155;
+  --gold: #e8b75a;
+  --cyan: #65d9ff;
+  --green: #7dffbd;
+  --shadow: 0 25px 70px rgba(0,0,0,.55);
+  --radius: 24px;
+  --max: 1180px;
+}
+* { box-sizing: border-box; }
+html { scroll-behavior: smooth; background-color: black; }
+body { margin: 0; background: var(--bg); color: var(--text); font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif; line-height: 1.75; overflow-x: hidden; }
+button, input { font: inherit; }
+button { cursor: pointer; }
+::selection { background: var(--red); color: white; }
+#app { min-height: 100vh; background: radial-gradient(circle at 50% -10%, rgba(229,9,47,.13), transparent 35%), var(--bg); }
+.progress { position: fixed; z-index: 1000; inset: 0 0 auto 0; height: 3px; background: transparent; }
+.progress i { display:block; height:100%; width:0; background: linear-gradient(90deg,var(--red),var(--gold),var(--cyan)); box-shadow:0 0 18px rgba(229,9,47,.8); }
+.topbar { position: sticky; top:0; z-index:900; border-bottom:1px solid var(--line); background:rgba(5,5,5,.78); backdrop-filter: blur(18px); }
+.topbar-inner { max-width:var(--max); margin:auto; padding:12px 20px; display:flex; gap:12px; align-items:center; justify-content:space-between; }
+.brand { display:flex; align-items:center; gap:10px; font-weight:900; letter-spacing:.16em; font-size:12px; }
+.brand-mark { width:28px; height:28px; border:1px solid rgba(255,255,255,.22); border-radius:50%; display:grid; place-items:center; color:var(--red2); box-shadow:0 0 24px rgba(229,9,47,.22); }
+.top-actions { display:flex; gap:8px; flex-wrap:wrap; justify-content:flex-end; }
+.icon-btn, .pill-btn { border:1px solid var(--line); color:var(--text); background:rgba(255,255,255,.035); border-radius:999px; padding:8px 12px; transition:.2s ease; }
+.icon-btn:hover, .pill-btn:hover { border-color:rgba(229,9,47,.6); transform:translateY(-1px); background:rgba(229,9,47,.08); }
+.hero { max-width:var(--max); margin:auto; padding:58px 20px 36px; text-align:center; }
+.eyebrow { color:var(--red2); font-weight:900; letter-spacing:.24em; font-size:11px; text-transform:uppercase; }
+.hero h1 { margin:8px 0 4px; font-size:clamp(38px,8vw,88px); line-height:.95; letter-spacing:-.055em; font-weight:1000; text-transform:uppercase; text-shadow:0 0 40px rgba(229,9,47,.18); }
+.hero h1 span { color:var(--red2); }
+.hero .sub { max-width:740px; margin:18px auto 0; color:var(--muted); font-size:15px; }
+.autoplay-badge { display:inline-flex; gap:8px; align-items:center; margin-top:18px; padding:8px 13px; border:1px solid rgba(125,255,189,.25); background:rgba(125,255,189,.055); color:var(--green); border-radius:999px; font-size:11px; font-weight:900; letter-spacing:.12em; }
+.autoplay-dot { width:7px; height:7px; border-radius:50%; background:var(--green); box-shadow:0 0 12px var(--green); animation:pulse 1.6s infinite; }
+@keyframes pulse { 50% { opacity:.35; transform:scale(.75); } }
+.media-stage { max-width:560px; margin:30px auto 0; position:relative; }
+.video-shell { aspect-ratio:1/1; border-radius:28px; overflow:hidden; border:1px solid rgba(255,255,255,.12); background:#000; box-shadow:var(--shadow), 0 0 90px rgba(229,9,47,.10); position:relative; }
+.video-shell::after { content:""; position:absolute; inset:0; pointer-events:none; background:linear-gradient(180deg,rgba(0,0,0,.05),transparent 50%,rgba(0,0,0,.32)); }
+.video-shell video { width:100%; height:100%; object-fit:cover; display:block; }
+.video-status { position:absolute; z-index:2; left:14px; bottom:14px; padding:7px 10px; border-radius:10px; background:rgba(0,0,0,.65); border:1px solid rgba(255,255,255,.12); font-size:10px; font-weight:900; letter-spacing:.1em; }
+.intro-photo { margin:28px auto 0; width:min(300px,75%); aspect-ratio:1/2; border-radius:24px; overflow:hidden; border:1px solid rgba(255,255,255,.12); box-shadow:var(--shadow); background:#0b0b0b; }
+.intro-photo img { width:100%; height:100%; display:block; object-fit:cover; }
+.hero-buttons { margin-top:26px; display:flex; flex-wrap:wrap; justify-content:center; gap:10px; }
+.cta { border:1px solid rgba(229,9,47,.55); background:linear-gradient(135deg,var(--red),#9c001c); color:white; padding:12px 18px; border-radius:999px; font-weight:900; box-shadow:0 12px 30px rgba(229,9,47,.18); transition:.2s; }
+.cta:hover { transform:translateY(-2px); box-shadow:0 18px 36px rgba(229,9,47,.28); }
+.secondary { border:1px solid var(--line); background:rgba(255,255,255,.04); color:var(--text); padding:12px 18px; border-radius:999px; font-weight:800; }
+.section { max-width:var(--max); margin:auto; padding:34px 20px; }
+.section-head { display:flex; gap:18px; align-items:end; justify-content:space-between; flex-wrap:wrap; margin-bottom:18px; }
+.section-head h3 { margin:0; font-size:25px; letter-spacing:-.03em; }
+.section-head p { margin:0; color:var(--muted); font-size:13px; }
+.control-panel { display:grid; grid-template-columns:1fr auto; gap:10px; margin-bottom:18px; }
+.search { width:100%; border:1px solid var(--line); background:var(--panel); color:var(--text); padding:13px 15px; border-radius:14px; outline:none; }
+.search:focus { border-color:rgba(229,9,47,.65); box-shadow:0 0 0 3px rgba(229,9,47,.09); }
+.filter-row { display:flex; gap:8px; flex-wrap:wrap; }
+.filter { border:1px solid var(--line); background:var(--panel); color:var(--muted); padding:10px 13px; border-radius:12px; }
+.filter.active { color:#fff; border-color:rgba(229,9,47,.55); background:rgba(229,9,47,.12); }
+.layout { display:grid; grid-template-columns:280px minmax(0,1fr); gap:18px; align-items:start; }
+.sidebar { position:sticky; top:76px; max-height:calc(100vh - 96px); overflow:auto; padding:12px; border:1px solid var(--line); background:rgba(15,16,18,.78); border-radius:20px; }
+.sidebar-title { padding:7px 8px 12px; color:var(--muted); font-size:10px; letter-spacing:.16em; font-weight:900; }
+.nav-item { width:100%; text-align:left; display:grid; grid-template-columns:32px 1fr; gap:8px; align-items:center; border:0; border-left:2px solid transparent; color:var(--muted); background:transparent; padding:8px; border-radius:8px; transition:.18s; }
+.nav-item:hover { color:#fff; background:rgba(255,255,255,.04); }
+.nav-item.active { color:#fff; border-left-color:var(--red); background:rgba(229,9,47,.07); }
+.nav-item span { font-size:10px; opacity:.55; }
+.nav-item b { font-size:11px; line-height:1.35; }
+.story-grid { display:grid; gap:18px; }
+.story-card { border:1px solid var(--line); background:linear-gradient(180deg,rgba(20,21,25,.96),rgba(10,10,11,.96)); border-radius:var(--radius); padding:clamp(20px,4vw,34px); box-shadow:0 18px 55px rgba(0,0,0,.25); scroll-margin-top:88px; position:relative; overflow:hidden; }
+.story-card::before { content:""; position:absolute; width:170px; height:170px; border-radius:50%; background:rgba(229,9,47,.05); filter:blur(10px); right:-80px; top:-80px; pointer-events:none; }
+.chapter-kicker { color:var(--red2); font-size:10px; font-weight:1000; letter-spacing:.17em; text-transform:uppercase; }
+.story-card h2 { margin:8px 0 10px; font-size:clamp(24px,4vw,38px); line-height:1.08; letter-spacing:-.04em; }
+.chapter-line { height:1px; background:linear-gradient(90deg,var(--red),transparent); margin:16px 0 22px; }
+.story-body p { margin:0 0 16px; color:#e4e4e7; font-size:15px; }
+.story-body p:last-child { margin-bottom:0; }
+.chapter-actions { display:flex; gap:8px; flex-wrap:wrap; margin-top:22px; padding-top:15px; border-top:1px solid var(--line); }
+.chapter-actions button { border:1px solid var(--line); color:var(--muted); background:rgba(255,255,255,.025); border-radius:10px; padding:8px 11px; font-size:11px; font-weight:800; }
+.chapter-actions button:hover { color:#fff; border-color:rgba(229,9,47,.45); }
+.hidden { display:none !important; }
+.empty { padding:28px; border:1px dashed var(--line); border-radius:16px; color:var(--muted); text-align:center; }
+.footer { max-width:var(--max); margin:auto; padding:55px 20px 80px; text-align:center; color:var(--muted); }
+.footer strong { color:#fff; }
+.backtop { position:fixed; right:18px; bottom:18px; z-index:850; width:44px; height:44px; border-radius:50%; border:1px solid var(--line); background:rgba(15,16,18,.88); color:white; backdrop-filter:blur(12px); opacity:0; pointer-events:none; transition:.2s; }
+.backtop.show { opacity:1; pointer-events:auto; }
+.focus-overlay { position:fixed; inset:0; z-index:1200; background:rgba(0,0,0,.82); backdrop-filter:blur(14px); display:none; overflow:auto; padding:30px 16px; }
+.focus-overlay.open { display:block; }
+.focus-inner { max-width:900px; margin:0 auto; position:relative; }
+.focus-close { position:sticky; top:0; margin-left:auto; display:block; border:1px solid var(--line); background:#101114; color:#fff; border-radius:999px; padding:8px 13px; }
+.focus-content { margin-top:12px; }
+.toast { position:fixed; left:50%; bottom:24px; z-index:1500; transform:translate(-50%,20px); opacity:0; pointer-events:none; background:#f4f4f5; color:#050505; padding:9px 14px; border-radius:999px; font-size:12px; font-weight:900; transition:.22s; }
+.toast.show { opacity:1; transform:translate(-50%,0); }
+.no-scroll { overflow:hidden; }
+@media (max-width:900px) {
+  .layout { grid-template-columns:1fr; }
+  .sidebar { position:relative; top:auto; max-height:280px; }
+  .control-panel { grid-template-columns:1fr; }
+}
+@media (max-width:600px) {
+  .topbar-inner { padding:10px 12px; }
+  .brand { font-size:10px; }
+  .top-actions .pill-btn { display:none; }
+  .hero { padding-top:40px; }
+  .story-card { border-radius:18px; padding:19px; }
+  .story-body p { font-size:14px; line-height:1.7; }
+  .sidebar { max-height:230px; }
 }
 
-*{box-sizing:border-box}
-html{scroll-behavior:smooth;background-color:black;}
-body{
-  margin:0;
-  color:var(--white);
-  background:
-    radial-gradient(circle at 50% -10%, rgba(178,13,24,.22), transparent 34%),
-    radial-gradient(circle at 10% 30%, rgba(99,232,139,.07), transparent 28%),
-    radial-gradient(circle at 90% 60%, rgba(79,200,255,.07), transparent 30%),
-    linear-gradient(180deg,#030303 0%,#08080b 45%,#030303 100%);
-  font-family:Inter,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
-  overflow-x:hidden;
-}
-
-body:before{
-  content:"";
-  position:fixed;
-  inset:0;
-  pointer-events:none;
-  opacity:.12;
-  z-index:100;
-  background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 180 180' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.85' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='.42'/%3E%3C/svg%3E");
-  mix-blend-mode:screen;
-}
-
-a{color:inherit}
-button{font:inherit}
-
-.progress{
-  position:fixed;top:0;left:0;height:3px;width:0;z-index:9999;
-  background:linear-gradient(90deg,var(--red2),var(--orange),var(--gold));
-  box-shadow:0 0 16px var(--red2);
-}
-
-.nav{
-  position:fixed;top:0;left:0;right:0;z-index:999;
-  display:flex;align-items:center;justify-content:space-between;
-  padding:15px clamp(18px,4vw,60px);
-  background:linear-gradient(180deg,rgba(0,0,0,.9),rgba(0,0,0,0));
-  transition:.3s;
-}
-.nav.scrolled{
-  background:rgba(4,4,5,.86);
-  backdrop-filter:blur(14px);
-  border-bottom:1px solid var(--line);
-}
-.brand{
-  font-weight:900;letter-spacing:.16em;font-size:.82rem;
-  color:#fff;text-decoration:none;
-}
-.brand span{color:var(--red2)}
-.navlinks{display:flex;gap:8px}
-.navlinks a{
-  text-decoration:none;color:#c9c9c9;font-size:.78rem;
-  padding:8px 10px;border-radius:7px;transition:.2s;
-}
-.navlinks a:hover{color:#fff;background:rgba(255,255,255,.08)}
-@media(max-width:720px){.navlinks{display:none}}
-
-.hero{
-  min-height:100svh;
-  display:flex;align-items:center;justify-content:center;
-  position:relative;
-  padding:110px 18px 70px;
-  text-align:center;
-  overflow:hidden;
-}
-.hero:after{
-  content:"";position:absolute;inset:auto 0 0;height:28%;
-  background:linear-gradient(transparent,var(--bg));
-  pointer-events:none;
-}
-.moon{
-  position:absolute;width:min(55vw,520px);aspect-ratio:1;border-radius:50%;
-  top:9%;left:50%;transform:translateX(-50%);
-  background:
-    radial-gradient(circle at 35% 30%,#fff 0 2%,transparent 2.5%),
-    radial-gradient(circle at 68% 62%,#aaa 0 3%,transparent 3.5%),
-    radial-gradient(circle at 45% 72%,#bdbdbd 0 2%,transparent 2.5%),
-    radial-gradient(circle at 50% 50%,#fafafa,#bdbdbd 64%,#777);
-  opacity:.13;filter:blur(.3px);
-  box-shadow:0 0 100px rgba(255,255,255,.1);
-}
-.hero-content{position:relative;z-index:2;max-width:1050px}
-.kicker{
-  color:#ff6d6d;font-weight:800;letter-spacing:.28em;font-size:.72rem;
-  text-transform:uppercase;margin-bottom:18px;
-}
-h1{
-  margin:0;
-  font-size:clamp(3rem,10vw,8.8rem);
-  line-height:.82;
-  letter-spacing:-.065em;
-  text-transform:uppercase;
-  text-shadow:0 8px 40px #000,0 0 35px rgba(178,13,24,.25);
-}
-h1 .red{color:var(--red2)}
-.subtitle{
-  margin:25px auto 30px;max-width:720px;
-  color:#c9c9c9;line-height:1.7;font-size:clamp(.9rem,2vw,1.05rem);
-}
-.cta{
-  display:inline-flex;gap:10px;align-items:center;
-  border:1px solid rgba(255,255,255,.2);
-  background:rgba(255,255,255,.06);color:white;text-decoration:none;
-  padding:12px 18px;border-radius:8px;font-weight:800;font-size:.8rem;
-  text-transform:uppercase;letter-spacing:.12em;transition:.25s;
-}
-.cta:hover{background:var(--red);border-color:var(--red);transform:translateY(-2px)}
-
-.intro-wrap{
-  width:min(78vw,560px);
-  margin:46px auto 0;
-  position:relative;
-  z-index:4;
-}
-.intro-frame{
-  position:relative;
-  width:100%;
-  aspect-ratio:1/1;
-  overflow:hidden;
-  border:1px solid rgba(255,255,255,.18);
-  border-radius:14px;
-  background:#000;
-  box-shadow:0 0 0 1px rgba(178,13,24,.12),0 25px 90px rgba(0,0,0,.7);
-}
-.intro-frame:before,.intro-frame:after{
-  content:"";position:absolute;z-index:2;pointer-events:none;
-}
-.intro-frame:before{
-  inset:10px;border:1px solid rgba(255,255,255,.1);border-radius:9px;
-}
-.intro-frame:after{
-  left:0;right:0;bottom:0;height:35%;
-  background:linear-gradient(transparent,rgba(0,0,0,.65));
-}
-#introVideo{
-  width:100%;height:100%;object-fit:cover;display:block;
-  background:#000;
-}
-.video-label{
-  position:absolute;z-index:3;left:16px;bottom:14px;
-  font-size:.68rem;font-weight:800;letter-spacing:.18em;
-  color:#eee;text-transform:uppercase;
-  text-shadow:0 2px 10px #000;
-}
-
-main{position:relative;z-index:2}
-.section{
-  width:min(1100px,92vw);margin:0 auto;padding:95px 0;
-}
-.section-head{
-  display:flex;align-items:end;justify-content:space-between;gap:25px;
-  margin-bottom:30px;border-bottom:1px solid var(--line);padding-bottom:18px;
-}
-.eyebrow{
-  color:var(--red2);font-weight:900;letter-spacing:.18em;
-  text-transform:uppercase;font-size:.7rem;
-}
-.section h2{
-  margin:6px 0 0;font-size:clamp(2rem,5vw,4rem);
-  letter-spacing:-.04em;line-height:.95;
-}
-.meta{color:#777;font-size:.75rem;text-align:right}
-
-.kingdoms{
-  display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin:30px 0 0;
-}
-.kingdom{
-  min-height:150px;padding:22px;border:1px solid var(--line);
-  background:linear-gradient(145deg,rgba(255,255,255,.06),rgba(255,255,255,.015));
-  position:relative;overflow:hidden;
-}
-.kingdom:before{
-  content:"";position:absolute;left:0;top:0;width:100%;height:3px;
-  background:var(--accent);
-}
-.kingdom h3{margin:0 0 8px;font-size:1.1rem}
-.kingdom p{margin:0;color:#aaa;font-size:.85rem;line-height:1.55}
-.fire{--accent:#ff5b36}.water{--accent:#3cbcff}.earth{--accent:#bd965d}.wind{--accent:#62e890}
-@media(max-width:800px){.kingdoms{grid-template-columns:repeat(2,1fr)}}
-@media(max-width:470px){.kingdoms{grid-template-columns:1fr}}
-
-.character-grid{
-  display:grid;grid-template-columns:repeat(4,1fr);gap:12px;
-}
-.character{
-  padding:24px 18px;min-height:190px;border:1px solid var(--line);
-  background:var(--card);box-shadow:var(--shadow);
-  transition:transform .3s,border-color .3s;
-}
-.character:hover{transform:translateY(-5px);border-color:rgba(255,255,255,.25)}
-.character .symbol{
-  width:42px;height:42px;border-radius:50%;display:grid;place-items:center;
-  background:rgba(255,255,255,.06);font-size:1.2rem;margin-bottom:20px;
-}
-.character h3{margin:0 0 7px}
-.character p{color:#a7a7a7;font-size:.82rem;line-height:1.6;margin:0}
-.c-dyas .symbol{color:#fff;box-shadow:0 0 20px rgba(255,255,255,.15)}
-.c-sofyan .symbol{color:var(--green)}
-.c-wildan .symbol{color:var(--blue)}
-.c-rafa .symbol{color:var(--purple)}
-@media(max-width:800px){.character-grid{grid-template-columns:repeat(2,1fr)}}
-@media(max-width:470px){.character-grid{grid-template-columns:1fr}}
-
-.movie{
-  position:relative;padding:55px 0;
-}
-.movie:before{
-  content:"";position:absolute;left:50%;top:0;bottom:0;width:1px;
-  background:linear-gradient(transparent,var(--red),transparent);opacity:.4;
-}
-.fight{
-  position:relative;display:grid;grid-template-columns:120px 1fr;gap:28px;
-  margin:0 0 42px;
-}
-.fight-number{
-  position:sticky;top:90px;align-self:start;
-  font-size:4.2rem;line-height:1;font-weight:1000;color:rgba(255,255,255,.07);
-  text-align:right;letter-spacing:-.08em;
-}
-.fight-card{
-  border:1px solid var(--line);background:rgba(9,9,11,.76);
-  padding:30px;border-radius:3px;box-shadow:var(--shadow);
-}
-.fight-title{
-  display:flex;justify-content:space-between;gap:15px;align-items:start;
-  margin-bottom:18px;
-}
-.fight-title h3{margin:0;font-size:clamp(1.3rem,3vw,2.2rem);line-height:1}
-.time{font-size:.7rem;color:#777;white-space:nowrap;letter-spacing:.12em}
-.fight-card p{color:#c0c0c0;line-height:1.85;margin:0 0 15px}
-.fight-card p:last-child{margin-bottom:0}
-.skill{
-  margin:20px 0;padding:15px 17px;border-left:3px solid var(--red2);
-  background:linear-gradient(90deg,rgba(178,13,24,.12),transparent);
-  font-weight:800;color:#eee;line-height:1.55;
-}
-.quote{
-  margin:20px 0;padding:20px;
-  font-family:Georgia,serif;font-size:1.25rem;line-height:1.5;
-  color:#fff;background:rgba(255,255,255,.035);
-  border:1px solid rgba(255,255,255,.1);
-}
-.quote:before{content:"“";color:var(--red2);font-size:2rem;margin-right:5px}
-@media(max-width:700px){
-  .movie:before{left:13px}
-  .fight{grid-template-columns:38px 1fr;gap:15px}
-  .fight-number{font-size:2rem;text-align:left}
-  .fight-card{padding:22px}
-  .fight-title{display:block}.time{display:block;margin-top:8px}
-}
-
-
-.poster-section{
-  width:min(1100px,92vw);
-  margin:0 auto;
-  padding:35px 0 95px;
-}
-.poster-shell{
-  display:grid;
-  grid-template-columns:minmax(280px, .85fr) minmax(280px, 1.15fr);
-  gap:34px;
-  align-items:center;
-  padding:28px;
-  border:1px solid rgba(255,255,255,.13);
-  background:
-    radial-gradient(circle at 80% 20%,rgba(255,157,46,.10),transparent 28%),
-    radial-gradient(circle at 15% 80%,rgba(79,200,255,.08),transparent 30%),
-    rgba(8,8,10,.78);
-  box-shadow:0 30px 100px rgba(0,0,0,.55);
-}
-.poster-frame{
-  position:relative;
-  max-width:500px;
-  margin:auto;
-  border:1px solid rgba(255,255,255,.18);
-  padding:7px;
-  background:#050505;
-  box-shadow:0 0 0 1px rgba(178,13,24,.12),0 25px 70px rgba(0,0,0,.65);
-  transform:rotate(-1deg);
-  transition:transform .45s ease,box-shadow .45s ease;
-}
-.poster-frame:hover{
-  transform:rotate(0deg) scale(1.015);
-  box-shadow:0 0 35px rgba(178,13,24,.22),0 30px 90px rgba(0,0,0,.75);
-}
-.poster-frame img{
-  width:100%;
-  display:block;
-  height:auto;
-}
-.poster-copy .eyebrow{margin-bottom:9px}
-.poster-copy h2{
-  font-size:clamp(2rem,5vw,4rem);
-  line-height:.92;
-  margin:0 0 18px;
-  letter-spacing:-.05em;
-}
-.poster-copy p{
-  color:#aaa;
-  line-height:1.8;
-  margin:0 0 16px;
-}
-.poster-tags{
-  display:flex;
-  flex-wrap:wrap;
-  gap:8px;
-  margin-top:22px;
-}
-.poster-tag{
-  border:1px solid rgba(255,255,255,.12);
-  background:rgba(255,255,255,.045);
-  padding:8px 11px;
-  font-size:.68rem;
-  letter-spacing:.1em;
-  text-transform:uppercase;
-  color:#ddd;
-}
-@media(max-width:760px){
-  .poster-shell{grid-template-columns:1fr;padding:18px}
-  .poster-frame{max-width:560px}
-}
-
-.final{
-  text-align:center;padding:100px 20px 130px;
-  position:relative;overflow:hidden;
-}
-.final-sun{
-  width:min(60vw,460px);aspect-ratio:1;border-radius:50%;
-  margin:0 auto -220px;
-  background:radial-gradient(circle,#fff 0,#ffe9a1 18%,#ffb52f 38%,transparent 70%);
-  filter:blur(2px);opacity:.22;
-}
-.final h2{font-size:clamp(2.6rem,8vw,6rem);margin:0;line-height:.88;letter-spacing:-.06em}
-.final p{max-width:720px;margin:25px auto;color:#aaa;line-height:1.8}
-.epilogue{
-  margin:50px auto 0;max-width:800px;border:1px solid var(--line);
-  padding:30px;background:rgba(255,255,255,.035);line-height:1.8;color:#c9c9c9;
-}
-footer{
-  border-top:1px solid var(--line);padding:28px 20px;text-align:center;
-  color:#666;font-size:.72rem;letter-spacing:.08em;text-transform:uppercase;
-}
-
-.reveal{opacity:0;transform:translateY(22px);transition:opacity .7s ease,transform .7s ease}
-.reveal.visible{opacity:1;transform:none}
-
-#top{
-  position:fixed;right:18px;bottom:18px;z-index:500;
-  width:43px;height:43px;border:1px solid var(--line);border-radius:50%;
-  background:rgba(0,0,0,.72);color:white;cursor:pointer;
-  opacity:0;pointer-events:none;transition:.25s;
-}
-#top.show{opacity:1;pointer-events:auto}
+/* EXTENDED PROFESSIONAL UTILITY LAYER */
+.fx-001 { --fx-level: 1; }
+.fx-002 { --fx-level: 2; }
+.fx-003 { --fx-level: 3; }
+.fx-004 { --fx-level: 4; }
+.fx-005 { --fx-level: 5; }
+.fx-006 { --fx-level: 6; }
+.fx-007 { --fx-level: 7; }
+.fx-008 { --fx-level: 8; }
+.fx-009 { --fx-level: 9; }
+.fx-010 { --fx-level: 10; }
+.fx-011 { --fx-level: 11; }
+.fx-012 { --fx-level: 12; }
+.fx-013 { --fx-level: 13; }
+.fx-014 { --fx-level: 14; }
+.fx-015 { --fx-level: 15; }
+.fx-016 { --fx-level: 16; }
+.fx-017 { --fx-level: 17; }
+.fx-018 { --fx-level: 18; }
+.fx-019 { --fx-level: 19; }
+.fx-020 { --fx-level: 20; }
+.fx-021 { --fx-level: 21; }
+.fx-022 { --fx-level: 22; }
+.fx-023 { --fx-level: 23; }
+.fx-024 { --fx-level: 24; }
+.fx-025 { --fx-level: 25; }
+.fx-026 { --fx-level: 26; }
+.fx-027 { --fx-level: 27; }
+.fx-028 { --fx-level: 28; }
+.fx-029 { --fx-level: 29; }
+.fx-030 { --fx-level: 30; }
+.fx-031 { --fx-level: 31; }
+.fx-032 { --fx-level: 32; }
+.fx-033 { --fx-level: 33; }
+.fx-034 { --fx-level: 34; }
+.fx-035 { --fx-level: 35; }
+.fx-036 { --fx-level: 36; }
+.fx-037 { --fx-level: 37; }
+.fx-038 { --fx-level: 38; }
+.fx-039 { --fx-level: 39; }
+.fx-040 { --fx-level: 40; }
+.fx-041 { --fx-level: 41; }
+.fx-042 { --fx-level: 42; }
+.fx-043 { --fx-level: 43; }
+.fx-044 { --fx-level: 44; }
+.fx-045 { --fx-level: 45; }
+.fx-046 { --fx-level: 46; }
+.fx-047 { --fx-level: 47; }
+.fx-048 { --fx-level: 48; }
+.fx-049 { --fx-level: 49; }
+.fx-050 { --fx-level: 50; }
+.fx-051 { --fx-level: 51; }
+.fx-052 { --fx-level: 52; }
+.fx-053 { --fx-level: 53; }
+.fx-054 { --fx-level: 54; }
+.fx-055 { --fx-level: 55; }
+.fx-056 { --fx-level: 56; }
+.fx-057 { --fx-level: 57; }
+.fx-058 { --fx-level: 58; }
+.fx-059 { --fx-level: 59; }
+.fx-060 { --fx-level: 60; }
+.fx-061 { --fx-level: 61; }
+.fx-062 { --fx-level: 62; }
+.fx-063 { --fx-level: 63; }
+.fx-064 { --fx-level: 64; }
+.fx-065 { --fx-level: 65; }
+.fx-066 { --fx-level: 66; }
+.fx-067 { --fx-level: 67; }
+.fx-068 { --fx-level: 68; }
+.fx-069 { --fx-level: 69; }
+.fx-070 { --fx-level: 70; }
+.fx-071 { --fx-level: 71; }
+.fx-072 { --fx-level: 72; }
+.fx-073 { --fx-level: 73; }
+.fx-074 { --fx-level: 74; }
+.fx-075 { --fx-level: 75; }
+.fx-076 { --fx-level: 76; }
+.fx-077 { --fx-level: 77; }
+.fx-078 { --fx-level: 78; }
+.fx-079 { --fx-level: 79; }
+.fx-080 { --fx-level: 80; }
+.fx-081 { --fx-level: 81; }
+.fx-082 { --fx-level: 82; }
+.fx-083 { --fx-level: 83; }
+.fx-084 { --fx-level: 84; }
+.fx-085 { --fx-level: 85; }
+.fx-086 { --fx-level: 86; }
+.fx-087 { --fx-level: 87; }
+.fx-088 { --fx-level: 88; }
+.fx-089 { --fx-level: 89; }
+.fx-090 { --fx-level: 90; }
+.fx-091 { --fx-level: 91; }
+.fx-092 { --fx-level: 92; }
+.fx-093 { --fx-level: 93; }
+.fx-094 { --fx-level: 94; }
+.fx-095 { --fx-level: 95; }
+.fx-096 { --fx-level: 96; }
+.fx-097 { --fx-level: 97; }
+.fx-098 { --fx-level: 98; }
+.fx-099 { --fx-level: 99; }
+.fx-100 { --fx-level: 100; }
+.fx-101 { --fx-level: 101; }
+.fx-102 { --fx-level: 102; }
+.fx-103 { --fx-level: 103; }
+.fx-104 { --fx-level: 104; }
+.fx-105 { --fx-level: 105; }
+.fx-106 { --fx-level: 106; }
+.fx-107 { --fx-level: 107; }
+.fx-108 { --fx-level: 108; }
+.fx-109 { --fx-level: 109; }
+.fx-110 { --fx-level: 110; }
+.fx-111 { --fx-level: 111; }
+.fx-112 { --fx-level: 112; }
+.fx-113 { --fx-level: 113; }
+.fx-114 { --fx-level: 114; }
+.fx-115 { --fx-level: 115; }
+.fx-116 { --fx-level: 116; }
+.fx-117 { --fx-level: 117; }
+.fx-118 { --fx-level: 118; }
+.fx-119 { --fx-level: 119; }
+.fx-120 { --fx-level: 120; }
+.fx-121 { --fx-level: 121; }
+.fx-122 { --fx-level: 122; }
+.fx-123 { --fx-level: 123; }
+.fx-124 { --fx-level: 124; }
+.fx-125 { --fx-level: 125; }
+.fx-126 { --fx-level: 126; }
+.fx-127 { --fx-level: 127; }
+.fx-128 { --fx-level: 128; }
+.fx-129 { --fx-level: 129; }
+.fx-130 { --fx-level: 130; }
+.fx-131 { --fx-level: 131; }
+.fx-132 { --fx-level: 132; }
+.fx-133 { --fx-level: 133; }
+.fx-134 { --fx-level: 134; }
+.fx-135 { --fx-level: 135; }
+.fx-136 { --fx-level: 136; }
+.fx-137 { --fx-level: 137; }
+.fx-138 { --fx-level: 138; }
+.fx-139 { --fx-level: 139; }
+.fx-140 { --fx-level: 140; }
+.fx-141 { --fx-level: 141; }
+.fx-142 { --fx-level: 142; }
+.fx-143 { --fx-level: 143; }
+.fx-144 { --fx-level: 144; }
+.fx-145 { --fx-level: 145; }
+.fx-146 { --fx-level: 146; }
+.fx-147 { --fx-level: 147; }
+.fx-148 { --fx-level: 148; }
+.fx-149 { --fx-level: 149; }
+.fx-150 { --fx-level: 150; }
+.fx-151 { --fx-level: 151; }
+.fx-152 { --fx-level: 152; }
+.fx-153 { --fx-level: 153; }
+.fx-154 { --fx-level: 154; }
+.fx-155 { --fx-level: 155; }
+.fx-156 { --fx-level: 156; }
+.fx-157 { --fx-level: 157; }
+.fx-158 { --fx-level: 158; }
+.fx-159 { --fx-level: 159; }
+.fx-160 { --fx-level: 160; }
+.fx-161 { --fx-level: 161; }
+.fx-162 { --fx-level: 162; }
+.fx-163 { --fx-level: 163; }
+.fx-164 { --fx-level: 164; }
+.fx-165 { --fx-level: 165; }
+.fx-166 { --fx-level: 166; }
+.fx-167 { --fx-level: 167; }
+.fx-168 { --fx-level: 168; }
+.fx-169 { --fx-level: 169; }
+.fx-170 { --fx-level: 170; }
+.fx-171 { --fx-level: 171; }
+.fx-172 { --fx-level: 172; }
+.fx-173 { --fx-level: 173; }
+.fx-174 { --fx-level: 174; }
+.fx-175 { --fx-level: 175; }
+.fx-176 { --fx-level: 176; }
+.fx-177 { --fx-level: 177; }
+.fx-178 { --fx-level: 178; }
+.fx-179 { --fx-level: 179; }
+.fx-180 { --fx-level: 180; }
+.space-001 { margin-top: 1px; }
+.space-002 { margin-top: 2px; }
+.space-003 { margin-top: 3px; }
+.space-004 { margin-top: 4px; }
+.space-005 { margin-top: 5px; }
+.space-006 { margin-top: 6px; }
+.space-007 { margin-top: 7px; }
+.space-008 { margin-top: 8px; }
+.space-009 { margin-top: 9px; }
+.space-010 { margin-top: 10px; }
+.space-011 { margin-top: 11px; }
+.space-012 { margin-top: 12px; }
+.space-013 { margin-top: 13px; }
+.space-014 { margin-top: 14px; }
+.space-015 { margin-top: 15px; }
+.space-016 { margin-top: 16px; }
+.space-017 { margin-top: 17px; }
+.space-018 { margin-top: 18px; }
+.space-019 { margin-top: 19px; }
+.space-020 { margin-top: 20px; }
+.space-021 { margin-top: 21px; }
+.space-022 { margin-top: 22px; }
+.space-023 { margin-top: 23px; }
+.space-024 { margin-top: 24px; }
+.space-025 { margin-top: 25px; }
+.space-026 { margin-top: 26px; }
+.space-027 { margin-top: 27px; }
+.space-028 { margin-top: 28px; }
+.space-029 { margin-top: 29px; }
+.space-030 { margin-top: 30px; }
+.space-031 { margin-top: 31px; }
+.space-032 { margin-top: 32px; }
+.space-033 { margin-top: 33px; }
+.space-034 { margin-top: 34px; }
+.space-035 { margin-top: 35px; }
+.space-036 { margin-top: 36px; }
+.space-037 { margin-top: 37px; }
+.space-038 { margin-top: 38px; }
+.space-039 { margin-top: 39px; }
+.space-040 { margin-top: 40px; }
+.space-041 { margin-top: 41px; }
+.space-042 { margin-top: 42px; }
+.space-043 { margin-top: 43px; }
+.space-044 { margin-top: 44px; }
+.space-045 { margin-top: 45px; }
+.space-046 { margin-top: 46px; }
+.space-047 { margin-top: 47px; }
+.space-048 { margin-top: 48px; }
+.space-049 { margin-top: 49px; }
+.space-050 { margin-top: 50px; }
+.space-051 { margin-top: 51px; }
+.space-052 { margin-top: 52px; }
+.space-053 { margin-top: 53px; }
+.space-054 { margin-top: 54px; }
+.space-055 { margin-top: 55px; }
+.space-056 { margin-top: 56px; }
+.space-057 { margin-top: 57px; }
+.space-058 { margin-top: 58px; }
+.space-059 { margin-top: 59px; }
+.space-060 { margin-top: 60px; }
+.space-061 { margin-top: 61px; }
+.space-062 { margin-top: 62px; }
+.space-063 { margin-top: 63px; }
+.space-064 { margin-top: 64px; }
+.space-065 { margin-top: 65px; }
+.space-066 { margin-top: 66px; }
+.space-067 { margin-top: 67px; }
+.space-068 { margin-top: 68px; }
+.space-069 { margin-top: 69px; }
+.space-070 { margin-top: 70px; }
+.space-071 { margin-top: 71px; }
+.space-072 { margin-top: 72px; }
+.space-073 { margin-top: 73px; }
+.space-074 { margin-top: 74px; }
+.space-075 { margin-top: 75px; }
+.space-076 { margin-top: 76px; }
+.space-077 { margin-top: 77px; }
+.space-078 { margin-top: 78px; }
+.space-079 { margin-top: 79px; }
+.space-080 { margin-top: 80px; }
 </style>
 </head>
-
 <body>
-<div class="progress" id="progress"></div>
-
-<nav class="nav" id="nav">
-  <a class="brand" href="#top-page">AKATSUKI<span>◆</span>DAYBREAK</a>
-  <div class="navlinks">
-    <a href="#world">Dunia</a>
-    <a href="#heroes">Karakter</a>
-    <a href="#poster">Poster</a>
-    <a href="#movie">Cerita</a>
-    <a href="#ending">Akhir</a>
-  </div>
-</nav>
-
-<header class="hero" id="top-page">
-  <div class="moon"></div>
-  <div class="hero-content">
-    <div class="kicker">Akatsuki The Movie</div>
-    <h1><span class="red">Echo</span> of the<br>Four Kingdoms</h1>
-    <p class="subtitle">
-      Bumi memiliki empat jantung. Empat kerajaan menjaga empat inti elemental.
-      Ketika <b>Nezarkos, The Star Devourer</b> datang untuk memakan semuanya,
-      empat penjaga harus bangkit sebelum dunia kehilangan fajar terakhirnya.
-    </p>
-
-    <div class="intro-wrap" aria-label="Video intro">
-      <div class="intro-frame">
-        <video id="introVideo" autoplay muted loop playsinline preload="auto">
-          <source src="intro.mp4" type="video/mp4">
-          Browser kamu tidak mendukung video HTML5.
-        </video>
-        <div class="video-label">INTRO</div>
+<div id="app">
+  <div class="progress"><i id="progressBar"></i></div>
+  <header class="topbar">
+    <div class="topbar-inner">
+      <div class="brand"><span class="brand-mark">◉</span> AKATSUKI DAYBREAK</div>
+      <div class="top-actions">
+        <button class="pill-btn" id="toggleSidebar">Daftar isi</button>
+        <button class="pill-btn" id="randomBtn">Scene acak</button>
+        <button class="pill-btn" id="focusAllBtn">Mode fokus</button>
       </div>
     </div>
+  </header>
 
-    <div style="margin-top:25px">
-      <a class="cta" href="#world">Mulai Cerita ↓</a>
-    </div>
-  </div>
-</header>
-
-<main>
-<section class="section reveal" id="world">
-  <div class="section-head">
-    <div>
-      <div class="eyebrow">World</div>
-      <h2>Empat Jantung Dunia</h2>
-    </div>
-    <div class="meta">THE FOUR KINGDOMS</div>
-  </div>
-
-  <p style="color:#aaa;line-height:1.8;max-width:850px">
-    Bumi punya 4 jantung, 4 kerajaan. Kazangu Kerajaan Api, Naeris Kerajaan Air,
-    Ghael Kerajaan Tanah, Vayra Kerajaan Angin. Di setiap kerajaan ada Inti Elemental.
-    Nezarkos, The Star Devourer, alien 4 meter dengan armor meteor hidup dan 6 mata datang
-    untuk memakan 4 inti itu agar berevolusi jadi dewa. Dia bukan meteor, dia adalah lubang
-    gravitasi yang berjalan.
-  </p>
-
-  <div class="kingdoms">
-    <article class="kingdom fire"><h3>🔥 Kazangu</h3><p>Kerajaan Api — tempat jatuhnya kerajaan pertama dan awal kebangkitan cahaya Dyas.</p></article>
-    <article class="kingdom water"><h3>🌊 Naeris</h3><p>Kerajaan Air — kota di dalam gelembung air raksasa di dasar laut.</p></article>
-    <article class="kingdom earth"><h3>⛰️ Ghael</h3><p>Kerajaan Tanah — benteng besi yang dipertahankan Rafa seorang diri.</p></article>
-    <article class="kingdom wind"><h3>🌪️ Vayra</h3><p>Kerajaan Angin — kampung halaman Sofyan dan medan pertempuran terakhir.</p></article>
-  </div>
-</section>
-
-<section class="section reveal" id="heroes">
-  <div class="section-head">
-    <div><div class="eyebrow">The Four</div><h2>Empat Penjaga</h2></div>
-    <div class="meta">AKATSUKI</div>
-  </div>
-
-  <div class="character-grid">
-    <article class="character c-dyas">
-      <div class="symbol">✦</div>
-      <h3>Dyas — Cahaya</h3>
-      <p>Pedang Cahaya & Manipulasi Cahaya. Kebangkitan: <b>Kazangu Light Seraph</b>.</p>
-    </article>
-    <article class="character c-sofyan">
-      <div class="symbol">〰</div>
-      <h3>Sofyan — Angin</h3>
-      <p>Penguasa badai. Kebangkitan: <b>Vayra Storm Sovereign</b>.</p>
-    </article>
-    <article class="character c-wildan">
-      <div class="symbol">ϟ</div>
-      <h3>Wildan — Listrik</h3>
-      <p>Manipulasi listrik murni. Kebangkitan: <b>Naeris Lightning Monarch</b>.</p>
-    </article>
-    <article class="character c-rafa">
-      <div class="symbol">⚔</div>
-      <h3>Rafa — Pedang Petir</h3>
-      <p>Pedang petir. Kebangkitan: <b>Ghael Thunder God</b>.</p>
-    </article>
-  </div>
-</section>
-
-
-<section class="poster-section reveal" id="poster">
-  <div class="poster-shell">
-    <div class="poster-frame">
-      <img src="photo1.jpg" alt="Poster Akatsuki The Movie: Echo of the Four Kingdoms">
-    </div>
-    <div class="poster-copy">
-      <div class="eyebrow">Official Movie Poster</div>
-      <h2>Four Elements.<br>One Fate.</h2>
-      <p>
-        Empat penjaga berdiri di tengah kehancuran empat kerajaan.
-        Sofyan membawa badai, Rafa menjadi pedang petir, Dyas membawa cahaya,
-        dan Wildan mengendalikan listrik.
-      </p>
-      <p>
-        Di atas mereka, ancaman terbesar menunggu: <b>Nezarkos, The Star Devourer.</b>
-        Poster ini menjadi visual utama sebelum kisah film memasuki lima pertarungan besarnya.
-      </p>
-      <div class="poster-tags">
-        <span class="poster-tag">Sofyan • Wind</span>
-        <span class="poster-tag">Rafa • Thunder Blade</span>
-        <span class="poster-tag">Dyas • Light</span>
-        <span class="poster-tag">Wildan • Electricity</span>
+  <main>
+    <section class="hero" id="top">
+      <div class="eyebrow">THE COMPLETE STORY ARCHIVE</div>
+      <h1>AKATSUKI <span>DAYBREAK</span></h1>
+      <p class="sub">Season 1 • Season 2 • The Movie — Echo of the Four Kingdoms</p>
+      <div class="autoplay-badge"><span class="autoplay-dot"></span>AUTOPLAY • MUTED • LOOP • INTRO AKTIF</div>
+      <div class="media-stage">
+        <div class="video-shell">
+          <video id="introVideo" src="intro.mp4" autoplay muted loop playsinline preload="auto"></video>
+          <div class="video-status">INTRO</div>
+        </div>
       </div>
-    </div>
+      <div class="intro-photo"><img src="photo1.jpg" alt="Pembuka cerita Akatsuki Daybreak" loading="eager"></div>
+      <div class="hero-buttons">
+        <button class="cta" id="startBtn">Mulai cerita ↓</button>
+        <button class="secondary" id="playBtn">Putar ulang intro</button>
+        <button class="secondary" id="muteBtn" disabled>🔇 Mute aktif</button>
+      </div>
+    </section>
+
+    <section class="section" id="story">
+      <div class="section-head">
+        <div>
+          <h3>Arsip Cerita</h3>
+          <p>Semua materi yang dikirim dimasukkan sebagai bagian cerita tanpa mengubah alurnya.</p>
+        </div>
+        <div id="countLabel" class="eyebrow">30 BAGIAN</div>
+      </div>
+      <div class="control-panel">
+        <input id="search" class="search" type="search" placeholder="Cari karakter, jurus, episode, kerajaan, atau kalimat...">
+        <div class="filter-row">
+          <button class="filter active" data-filter="all">Semua</button>
+          <button class="filter" data-filter="season1">Season 1</button>
+          <button class="filter" data-filter="season2">Season 2</button>
+          <button class="filter" data-filter="movie">Movie</button>
+        </div>
+      </div>
+      <div class="layout">
+        <aside class="sidebar" id="sidebar">
+          <div class="sidebar-title">NAVIGASI CERITA</div>
+          <button class="nav-item" data-target="chapter-0"><span>01</span><b>AKATSUKI DAYBREAK — FINAL CANON</b></button>
+<button class="nav-item" data-target="chapter-1"><span>02</span><b>EPISODE 1: Fajar di Bawah Bulan Retak</b></button>
+<button class="nav-item" data-target="chapter-2"><span>03</span><b>EPISODE 2: Rantai Listrik &amp; Tebasan Cahaya</b></button>
+<button class="nav-item" data-target="chapter-3"><span>04</span><b>EPISODE 3: Hantaman di Langit Purnama - SCENE POSTER LU</b></button>
+<button class="nav-item" data-target="chapter-4"><span>05</span><b>EPISODE 4: Pedang Yang Membelah Bulan &amp; Kutukan Petir</b></button>
+<button class="nav-item" data-target="chapter-5"><span>06</span><b>EPISODE 5 FINAL: DAYBREAK CANNON</b></button>
+<button class="nav-item" data-target="chapter-6"><span>07</span><b>EPISODE 8: Wadah Petir Hitam</b></button>
+<button class="nav-item" data-target="chapter-7"><span>08</span><b>EPISODE 9-10: Latihan Daybreak</b></button>
+<button class="nav-item" data-target="chapter-8"><span>09</span><b>EPISODE 11: Puncak Bulan</b></button>
+<button class="nav-item" data-target="chapter-9"><span>10</span><b>EPISODE 12: Dua Saudara Listrik</b></button>
+<button class="nav-item" data-target="chapter-10"><span>11</span><b>EPISODE 13-15: Shibai Bangkit</b></button>
+<button class="nav-item" data-target="chapter-11"><span>12</span><b>EPISODE 16: Cinta APHP</b></button>
+<button class="nav-item" data-target="chapter-12"><span>13</span><b>EPISODE 17-18: DUO MAUT TERBAIK - DYAS &amp; RAFA FINAL FORM</b></button>
+<button class="nav-item" data-target="chapter-13"><span>14</span><b>EPISODE 19-20: Angin Penyelamat</b></button>
+<button class="nav-item" data-target="chapter-14"><span>15</span><b>EPISODE 21-22: Wildan vs Wadah</b></button>
+<button class="nav-item" data-target="chapter-15"><span>16</span><b>EPISODE 23: Pedang Terakhir Dyas</b></button>
+<button class="nav-item" data-target="chapter-16"><span>17</span><b>EPISODE 24: Fajar Pertama</b></button>
+<button class="nav-item" data-target="chapter-17"><span>18</span><b>EPISODE 25: Akatsuki Daybreak - Nama Baru</b></button>
+<button class="nav-item" data-target="chapter-18"><span>19</span><b>EPISODE 26: TAMAT SEASON 1 - Janji di Bawah Purnama</b></button>
+<button class="nav-item" data-target="chapter-19"><span>20</span><b>AKATSUKI DAYBREAK: SEASON 2 (26 EPISODE)</b></button>
+<button class="nav-item" data-target="chapter-20"><span>21</span><b>ARC 1: KEBANGKITAN BAYANGAN (Episode 1 - 6)</b></button>
+<button class="nav-item" data-target="chapter-21"><span>22</span><b>ARC 2: EKSPEDISI DIMENSI LUAR (Episode 7 - 13)</b></button>
+<button class="nav-item" data-target="chapter-22"><span>23</span><b>ARC 3: PERANG FAKSI GELAP &amp; BUMI (Episode 14 - 20)</b></button>
+<button class="nav-item" data-target="chapter-23"><span>24</span><b>ARC 4: EKSPLORASI TIADA AKHIR (Episode 21 - 26)</b></button>
+<button class="nav-item" data-target="chapter-24"><span>25</span><b>AKATSUKI THE MOVIE: ECHO OF THE FOUR KINGDOMS</b></button>
+<button class="nav-item" data-target="chapter-25"><span>26</span><b>FIGHT 1: JATUHNYA KAZANGU - DYAS VS MASA LALU [Menit 0-15]</b></button>
+<button class="nav-item" data-target="chapter-26"><span>27</span><b>FIGHT 2: BADAI DI NAERIS - SOFYAN &amp; WILDAN, ANGIN DAN LISTRIK [Menit 15-35]</b></button>
+<button class="nav-item" data-target="chapter-27"><span>28</span><b>FIGHT 3: PERTAHANAN GHAEL - RAFA SANG PENDEKAR PETIR [Menit 35-55]</b></button>
+<button class="nav-item" data-target="chapter-28"><span>29</span><b>FIGHT 4: INVASI CAHAYA - DYAS DI KAPAL INDUK [Menit 55-70]</b></button>
+<button class="nav-item" data-target="chapter-29"><span>30</span><b>FIGHT 5: SKYFALL VAYRA - AWAKENING &amp; HELIOS CANNON [Menit 70-90]</b></button>
+        </aside>
+        <div class="story-grid" id="storyGrid">
+          <article class="story-card" id="chapter-0" data-title="akatsuki daybreak — final canon" data-index="0">
+  <div class="chapter-kicker">DUNIA • 1000 TAHUN SETELAH NARUTO</div>
+  <h2>AKATSUKI DAYBREAK — FINAL CANON</h2>
+  <div class="chapter-line"></div>
+  <div class="story-body"><p>DUNIA: 1000 tahun setelah Naruto, bulan purnama retak. Otsutsuki mau ambil alih lewat ritual bulan.</p>
+<p>TIM AKATSUKI (BAIK):</p>
+<p>WILDAN (Petir) - Pemimpin, 17th, kalem, mata petir hitam kutukan. Jutsu: Raikage Overdrive. Setengah Otsutsuki tanpa dia tau.</p>
+<p>RAFA (Listrik) - 16th, jenius teknologi, tangan kanan Wildan. Jutsu: Black Lightning Chain - rantai listrik yang bisa ikat bayangan.</p>
+<p>DYAS (Pedang Cahaya) - 17th, paling cool, diam. Senjata: Hikari Blade / Daybreak Excalibur - pedang dari cahaya murni, pecahan tulang Kaguya yang dimurnikan. Satu-satunya yang bisa bunuh Otsutsuki permanen. Jurus: Tebasan yang Membelah Malam.</p>
+<p>SOFYAN (Angin) - 15th, paling lincah, bisa terbang pakai Tempest Wings. Jutsu: Fuuton Midori Rasengan - Rasengan angin hijau yang menghantam + efek ledakan angin.</p>
+<p>VILLAIN:</p>
+<p>KAGUYA - Ibu kandung Ayaka, ibu angkat Wildan. Pemimpin Otsutsuki, tapi sebenarnya mau selamatkan anaknya.</p>
+<p>NANDAYO (Bayangan) - Jas putih, aura indigo biru tua tipis. Bisa masuk bayangan, curi ingatan. Pengkhianat.</p>
+<p>ZETSU PUTIH - Pasukan ribuan.</p>
+<p>HEROINE:</p>
+<p>AYAKA APHP - 16th, Putri Kuil Bulan, rambut perak mata ungu, kekuatan Moon Healing yang ternyata adalah Kunci Matahari. Pacar Wildan.</p></div>
+  <div class="chapter-actions">
+    <button class="copy-btn" data-copy="chapter-0">Salin bagian</button>
+    <button class="focus-btn" data-focus="chapter-0">Fokus bagian</button>
   </div>
-</section>
-
-<section class="section movie reveal" id="movie">
-  <div class="section-head">
-    <div><div class="eyebrow">Feature Film</div><h2>Alur Cerita</h2></div>
-    <div class="meta">± 90 MINUTES</div>
+</article><article class="story-card" id="chapter-1" data-title="episode 1: fajar di bawah bulan retak" data-index="1">
+  <div class="chapter-kicker">SEASON 1 • EPISODE 1</div>
+  <h2>EPISODE 1: Fajar di Bawah Bulan Retak</h2>
+  <div class="chapter-line"></div>
+  <div class="story-body"><p>Malam purnama pertama setelah 10 tahun. 4 sahabat dapat jubah Akatsuki hitam awan merah. Zetsu Putih turun dari bulan retak seperti hujan. Sofyan pertama kali bangkitkan sayap angin selamatkan desa. Dyas pertama kali cabut pedang cahaya, tebas 100 Zetsu dalam 1 tebasan, langit malam jadi siang 3 detik. Wildan pimpin dengan petir. Di akhir, Ayaka APHP turun dari cahaya bulan, panggil Wildan &quot;Kakak... akhirnya aku ketemu&quot;. PLOT TWIST: Wildan hilang ingatan 8 tahun, ternyata dia kakak angkat Ayaka.</p></div>
+  <div class="chapter-actions">
+    <button class="copy-btn" data-copy="chapter-1">Salin bagian</button>
+    <button class="focus-btn" data-focus="chapter-1">Fokus bagian</button>
   </div>
-
-  <article class="fight">
-    <div class="fight-number">01</div>
-    <div class="fight-card">
-      <div class="fight-title"><h3>Jatuhnya Kazangu — Dyas vs Masa Lalu</h3><span class="time">MENIT 0–15</span></div>
-      <p>Kazangu diserang pertama. 10.000 prajurit api membakar langit, tapi api mereka membeku di depan Nezarkos karena gravitasi. Raja Kazangu, ayah angkat Dyas, maju dengan pedang apinya. Nezarkos melipat gravitasi, raja hancur jadi bola besi. Inti Api keserap, dada Nezarkos menyala merah.</p>
-      <p>Dyas yang melihat siaran itu dari Vayra diam-diam kembali ke Kazangu yang sudah jadi kawah kaca. Di sana Nezarkos belum pergi, dia sedang mencerna Inti Api. Dyas mencabut pedang warisan ayahnya, tapi pedang api itu meleleh di dekat Nezarkos. Dyas marah, dia patahkan pedang api itu dan dari patahannya keluar cahaya putih murni.</p>
-      <div class="skill">Kazangu Legacy: Photon Blade — pedang cahaya yang tidak punya massa, hanya cahaya yang dipadatkan.</div>
-      <p>Dyas tebas, cahaya itu tidak bisa ditahan gravitasi, untuk pertama kalinya armor Nezarkos terbelah dan mengeluarkan darah hitam bercahaya. Nezarkos kaget, dia pukul Dyas dengan ledakan supernova mini dari Inti Api, Dyas terpental sampai keluar atmosfer Kazangu, pedang cahayanya retak tapi masih menyala. Nezarkos pergi, Dyas selamat karena cahayanya melindunginya. Dia sadar, cahaya adalah satu-satunya yang tidak bisa dimakan gravitasi.</p>
-    </div>
-  </article>
-
-  <article class="fight">
-    <div class="fight-number">02</div>
-    <div class="fight-card">
-      <div class="fight-title"><h3>Badai di Naeris — Sofyan & Wildan, Angin dan Listrik</h3><span class="time">MENIT 15–35</span></div>
-      <p>Nezarkos turun ke Naeris, kota di dalam gelembung air raksasa di dasar laut. Wildan sudah menunggu di dalam gelembung. Dia tidak pakai air, dia pakai listrik. Dia menempelkan kedua tangannya ke dinding gelembung dan melepaskan <b>Naeris: Thunder Dome — 100 Juta Volt.</b> Seluruh gelembung kota berubah menjadi sangkar listrik raksasa, petir menyambar-nyambar di dalam air. Nezarkos masuk, listrik itu tidak melukainya, tapi memperlambat gravitasinya karena listrik mengganggu medan magnetnya.</p>
-      <p>Di atas permukaan laut, Sofyan melayang. Dia melihat sahabatnya berjuang di bawah. Dia mengangkat kedua tangannya dan menciptakan badai, <b>Vayra: Eye of The Storm.</b> Dia tidak menyerang Nezarkos langsung, dia mengosongkan udara di atas laut Naeris, menciptakan vakum raksasa. Air laut naik ke atas karena vakum itu, membentuk tornado air setinggi 5 kilometer yang menghubungkan langit dan dasar laut.</p>
-      <p>Wildan melihat itu, dia mengerti. Dia mengalirkan semua listriknya ke tornado air yang dibuat Sofyan.</p>
-      <div class="skill">Combo: Storm Emperor's Spear — Tornado air berubah menjadi tombak petir raksasa yang berputar dengan angin Sofyan.</div>
-      <p>Tombak itu menembus gelembung Naeris dan menghantam dada Nezarkos, menembus Inti Api dan Inti Air yang baru dia ambil, membuat dua inti itu korslet. Nezarkos berteriak, untuk pertama kalinya dia merasakan listrik masuk ke jantungnya. Dia marah, dia meledakkan dua inti itu bersamaan, ledakan uap dan api yang menguapkan setengah Naeris. Sofyan menarik Wildan yang kehabisan listrik dengan anginnya dan kabur. Inti Air lepas dan masuk ke dada Nezarkos, sekarang dia punya dua inti tapi retak karena korslet listrik Wildan.</p>
-    </div>
-  </article>
-
-  <article class="fight">
-    <div class="fight-number">03</div>
-    <div class="fight-card">
-      <div class="fight-title"><h3>Pertahanan Ghael — Rafa Sang Pendekar Petir</h3><span class="time">MENIT 35–55</span></div>
-      <p>Ghael, benteng besi. Semua prajurit kabur. Rafa sendirian di gerbang dengan pedang katana hitamnya yang belum menyala.</p>
-      <p>Nezarkos mengirim 10.000 golem gravitasi. Rafa mencabut pedangnya pelan. Pedangnya tidak menyala api, tapi berderak, crack. Listrik statis. Rafa adalah pedang petir, dia tidak memanipulasi listrik seperti Wildan, dia <b>ADALAH petir yang berbentuk pedang.</b></p>
-      <div class="skill">Ghael Sword Style — First Form: Lightning Draw. Satu tebasan, 100 golem terbelah dan hangus jadi kaca karena panas petir 30.000 derajat.</div>
-      <p>Dia terus bergerak, Second Form — Thunder Chain, pedangnya dilempar dan memantul di antara golem seperti petir yang memantul, kembali ke tangannya. Selama 7 hari montase, Rafa tidak tidur, dia menjadi kilat yang menjaga Ghael. Gunung-gunung di sekitarnya hangus hitam karena sambaran petirnya.</p>
-      <p>Hari ke-7, Nezarkos datang sendiri. Rafa sudah kelelahan, pedang petirnya redup. Nezarkos mengangkat gunung besi Ghael dengan gravitasi dan menjatuhkannya ke Rafa. Rafa melihat gunung itu jatuh, dia tancapkan pedangnya ke tanah, dan berteriak <b>Final Form: Heavenly Thunder Pillar.</b> Dia memanggil petir dari langit Vayra yang ada di atas Ghael, petir ungu raksasa menyambar pedangnya dan naik ke atas menghancurkan gunung yang jatuh itu menjadi debu besi.</p>
-      <p>Ledakan petir dan gravitasi bertabrakan, seluruh Ghael meledak cahaya putih. Ketika cahaya hilang, Rafa berlutut, pedangnya patah setengah, tubuhnya hangus, tapi dia masih berdiri. Nezarkos berjalan melewatinya, mengambil Inti Tanah di bawah kakinya. Rafa mencoba tebas terakhir, Nezarkos pukul dia dengan gravitasi sampai terpental jauh. Nezarkos sekarang punya 3 inti, tapi tubuhnya bocor listrik karena pertarungan dengan Rafa dan Wildan, armornya retak mengeluarkan petir liar.</p>
-    </div>
-  </article>
-
-  <article class="fight">
-    <div class="fight-number">04</div>
-    <div class="fight-card">
-      <div class="fight-title"><h3>Invasi Cahaya — Dyas di Kapal Induk</h3><span class="time">MENIT 55–70</span></div>
-      <p>Dyas tidak ikut ke Ghael, dia terbang ke orbit, ke kapal induk Nezarkos sebesar bulan yang terbuat dari tulang bintang. Kapal itu tidak punya cahaya, hanya gelap dan gravitasi.</p>
-      <p>Di dalam kapal, dijaga Star Hive, anak-anak Nezarkos. Dyas masuk dengan pedang cahayanya yang sudah diperbaiki. Di tempat gelap, pedang cahaya Dyas adalah satu-satunya cahaya. Setiap tebasan Dyas bukan memotong, tapi membelah kegelapan itu sendiri.</p>
-      <div class="skill">Photon Blade Style: Light Refraction — cahaya pedangnya dibelokkan ke dinding kapal yang hidup, memantul dan membakar puluhan Hive sekaligus dari dalam.</div>
-      <p>Di inti kapal, Dyas menemukan jantung kapal adalah Inti Api yang asli yang belum dicerna. Dia menusukkan pedang cahayanya ke jantung itu, cahaya Dyas masuk dan menginfeksi Inti Api itu dengan cahaya murni. Dia menanam bom cahaya, <b>Nova Core: Daylight Bomb</b>, dan kabur.</p>
-      <p>Kapal induk meledak setengah, ledakan cahaya itu terlihat dari bumi seperti matahari kedua terbit di malam hari. Ledakan itu merambat lewat koneksi gravitasi dan melukai Nezarkos yang ada di bumi, membuat 3 inti di dadanya semakin retak dan tidak stabil. Dyas jatuh kembali ke bumi seperti komet cahaya.</p>
-    </div>
-  </article>
-
-  <article class="fight">
-    <div class="fight-number">05</div>
-    <div class="fight-card">
-      <div class="fight-title"><h3>Skyfall Vayra — Awakening & Helios Cannon</h3><span class="time">MENIT 70–90</span></div>
-      <p>Final. Vayra, kampung halaman Sofyan. Nezarkos dengan 3 inti retak dan bocor petir dan cahaya menancapkan 3 inti itu ke pulau utama Vayra dan memutar gravitasi. Pulau-pulau Vayra yang melayang ribuan tahun mulai jatuh. Langit terbalik, laut di atas kepala.</p>
-      <p>Sofyan, Wildan, Rafa yang diseret Dyas, dan Dyas berkumpul di pulau terakhir. Nezarkos pakai <b>Trinity Gravity Devour</b>, menarik elemen dari tubuh mereka. Sofyan sesak karena angin ditarik dari paru-paru, Wildan kejang karena listriknya ditarik, Rafa pedang petirnya padam karena gravitasi, Dyas cahayanya redup.</p>
-      <p>Pulau terakhir jatuh. Sofyan lihat rumah ibunya dengan lampu kecil masih nyala. Dia rindu, bukan marah. Dia lepas semua penahan anginnya dan berteriak. Inti Angin yang bersembunyi ribuan tahun keluar dan masuk ke dada Sofyan. Cahaya itu picu awakening semua.</p>
-
-      <div class="skill">Sofyan Awakening: Vayra Storm Sovereign — rambut hitam hijau jadi putih kehijauan menyala, di punggungnya sayap angin transparan, dia bukan kendalikan angin, dia jadi badai hidup.</div>
-      <div class="skill">Rafa Awakening: Ghael Thunder God — pedang petirnya yang patah menyatu dengan tubuhnya, seluruh tubuhnya jadi petir hidup, matanya petir, setiap langkah petir menyambar.</div>
-      <div class="skill">Wildan Awakening: Naeris Lightning Monarch — tubuhnya berubah jadi manusia listrik murni, 1 miliar volt mengalir di nadinya, dia melayang karena elektromagnetik.</div>
-      <div class="skill">Dyas Awakening: Kazangu Light Seraph — pedang cahayanya membesar jadi 10 meter, di punggungnya 6 sayap cahaya, dadanya jadi matahari putih.</div>
-
-      <p>Mereka serang. Rafa jadi petir, dia berlari mengelilingi Nezarkos 100 kali dalam 1 detik, <b>Thunder God: Infinite Lightning Slash</b>, setiap tebasan meninggalkan luka petir yang tidak bisa sembuh karena listrik. Wildan mengangkat semua air laut yang tumpah di langit dan mengubahnya jadi konduktor, <b>Lightning Monarch: World Wide Thunderstorm</b>, seluruh langit Vayra jadi badai petir, ribuan petir menyambar Nezarkos bersamaan, membuat 3 inti di dadanya korslet total.</p>
-
-      <p>Sofyan terbang tinggi dan menciptakan <b>Storm Sovereign: Vacuum Annihilation</b>, dia hapus udara di sekitar Nezarkos, membuat gravitasi Nezarkos tidak bisa menyebar karena tidak ada medium. Dyas tebas dengan pedang cahaya raksasanya, <b>Seraph: Photon Judgement</b>, membelah armor hidup Nezarkos jadi dua.</p>
-
-      <p>Nezarkos sekarat tapi masih hidup, dia gabung 3 inti retak jadi bola hitam seukuran pulau, <b>Trinity Annihilation Star</b>, untuk hapus Vayra.</p>
-
-      <p>Dyas tahu ini akhir. Dia terbang paling tinggi di atas bola itu, buka dadanya, 6 sayap cahayanya melebar dan berteriak <b>“KASIH GUE SEMUANYA!”</b></p>
-
-      <p>Sofyan, Rafa, Wildan mengerti, mereka salurkan semua energi awakening. Petir, Listrik, Angin masuk ke matahari di dada Dyas. Wujud dewa mereka hilang, kembali jadi manusia pingsan, jatuh ditahan angin terakhir Sofyan. Matahari di dada Dyas membesar sebesar bulan, warnanya putih, emas, dengan petir dan angin berputar di dalamnya.</p>
-
-      <div class="quote">Kau makan tiga kerajaan, sekarang coba telan matahari ini.</div>
-
-      <div class="skill">JURUS FINAL: JUDGEMENT OF THE FALLEN STAR — HELIOS ANNIHILATION CANNON.</div>
-
-      <p>Dari dada Dyas melesat pilar cahaya kolosal selebar Kerajaan Vayra, bukan laser tipis, tapi pilar cahaya murni yang di dalamnya ada petir Rafa, listrik Wildan, dan angin Sofyan yang berputar. Pilar itu berwarna putih emas dengan petir hijau dan biru di sisinya. Sebelum mengenai Nezarkos, Sofyan setengah sadar dorong Inti Angin ke dalam pilar itu.</p>
-
-      <p>Nezarkos angkat bola kehancuran dan tameng gravitasi 3 inti. Pilar cahaya tabrak. Tidak ada ledakan, hanya senyap keras. Tameng gravitasi retak, 3 inti pecah, Api padam, Air menguap, Tanah jadi debu. Armor hidup terkelupas, 6 mata pecah, dia berteriak “PANAS” bahasa manusia. Cahaya itu dorong dia naik dari langit Vayra, tembus atmosfer, sampai luar angkasa, sampai dia titik hitam kecil di dalam matahari buatan itu, lalu hilang jadi debu cahaya.</p>
-
-      <p>Cahaya itu menyilaukan bumi 10 detik. Ketika hilang, langit Vayra biru kembali, pulau-pulau yang jatuh kembali melayang pelan.</p>
-    </div>
-  </article>
-</section>
-
-<section class="final reveal" id="ending">
-  <div class="final-sun"></div>
-  <div class="eyebrow">Epilogue</div>
-  <h2>Penjaga Dunia.</h2>
-  <p>
-    Sebulan kemudian. 4 kerajaan bangun bersama. Di tengah Vayra dibangun patung
-    4 orang dengan jubah Akatsuki robek, Sofyan di depan dengan pusaran angin di tangan,
-    Dyas di samping dengan pedang cahaya berasap, Rafa dengan pedang petir retak,
-    Wildan dengan listrik mengalir di kaki.
-  </p>
-  <div class="epilogue">
-    Di bawahnya tertulis: <b>Dianggap Anggota Terlemah, Ternyata Penjaga Dunia.</b><br><br>
-    Kamera naik, 4 Inti Elemental melayang bersama di atas patung, dan di kejauhan
-    cahaya hijau kecil masih menyala di dada Sofyan, pedang petir Rafa masih berderak pelan,
-    listrik Wildan masih menyambar-nyambar kecil, dan pedang cahaya Dyas masih menyala redup.
+</article><article class="story-card" id="chapter-2" data-title="episode 2: rantai listrik &amp; tebasan cahaya" data-index="2">
+  <div class="chapter-kicker">SEASON 1 • EPISODE 2</div>
+  <h2>EPISODE 2: Rantai Listrik &amp; Tebasan Cahaya</h2>
+  <div class="chapter-line"></div>
+  <div class="story-body"><p>Nandayo jas putih muncul, masuk bayangan Rafa. Rafa kerasukan, serang Wildan sambil nangis ingat ortunya dibunuh. Wildan tidak tega serang. Rafa diikat Rafa sendiri? Tidak. DYAS bertindak: Dia nancapkan pedang cahayanya ke tanah, buat Arena Cahaya - Daybreak Prison. Bayangan Nandayo tidak bisa kabur. Rafa disetrum pelan oleh Wildan biar sadar. Nandayo tertawa: &quot;Yang kalian kurung bukan aku, tapi ingatan Wildan&quot;. PLOT TWIST: Ingatan Wildan yang hilang disimpan Nandayo di dalam bayangannya.</p></div>
+  <div class="chapter-actions">
+    <button class="copy-btn" data-copy="chapter-2">Salin bagian</button>
+    <button class="focus-btn" data-focus="chapter-2">Fokus bagian</button>
   </div>
-</section>
-</main>
+</article><article class="story-card" id="chapter-3" data-title="episode 3: hantaman di langit purnama - scene poster lu" data-index="3">
+  <div class="chapter-kicker">SEASON 1 • EPISODE 3</div>
+  <h2>EPISODE 3: Hantaman di Langit Purnama - SCENE POSTER LU</h2>
+  <div class="chapter-line"></div>
+  <div class="story-body"><p>Ini episode yang lu bikin gambarnya tadi. Kaguya umumin ritual 3 hari lagi. Nandayo mau culik Ayaka duluan. Sofyan marah, terbang kejar Nandayo di langit malam tanpa kota, background cuma bulan purnama gede.</p>
+<p>Dyas di bawah terbang juga, tebas dimensi biar Nandayo tidak teleport, kurung dengan cahaya + efek indigo biru tua Nandayo mulai retak.</p>
+<p>Sofyan dari atas menghantamkan Midori Rasengan langsung ke dada Nandayo sambil terbang - IMPACT brutal, gambar kecil keren yang lu minta.</p>
+<p>Rafa lempar rantai listrik ikat kaki Nandayo.</p>
+<p>Nandayo kalah tapi berbisik ke Sofyan: &quot;Kaguya butuh Ayaka untuk ritual... tapi bukan untuk dibunuh&quot;. Sofyan bingung. Di markas, Wildan obati Ayaka, Romance Scene: Ayaka obati luka petir Wildan, bilang &quot;Petirmu hangat... dulu kamu janji tidak akan tinggalin aku&quot;. Wildan cium kening Ayaka pertama kali.</p></div>
+  <div class="chapter-actions">
+    <button class="copy-btn" data-copy="chapter-3">Salin bagian</button>
+    <button class="focus-btn" data-focus="chapter-3">Fokus bagian</button>
+  </div>
+</article><article class="story-card" id="chapter-4" data-title="episode 4: pedang yang membelah bulan &amp; kutukan petir" data-index="4">
+  <div class="chapter-kicker">SEASON 1 • EPISODE 4</div>
+  <h2>EPISODE 4: Pedang Yang Membelah Bulan &amp; Kutukan Petir</h2>
+  <div class="chapter-line"></div>
+  <div class="story-body"><p>Kaguya culik Ayaka ke Istana Bayangan di balik bulan. Wildan mengamuk, kutukan Otsutsuki di matanya aktif, petirnya jadi hitam hancurkan setengah hutan. Rafa coba hentikan dengan rantai listriknya, tapi kalah. DYAS DATANG: Dia diam, cabut pedang cahaya full power. Satu tebasan vertikal - MEMBELAH GERBANG ISTANA BAYANGAN &amp; MEMBELAH BULAN PALSU. Kalimat ikonik Dyas: &quot;Cahaya tidak pernah kalah. Bayangan hanya ada karena cahaya mengizinkan.&quot;</p>
+<p>Di dalam istana, terungkap PLOT TWIST BESAR: Kaguya adalah ibu kandung Ayaka dan ibu angkat Wildan. Ayaka punya kutukan, akan mati di umur 17 saat bulan purnama sempurna. Kaguya mau tumbalkan dirinya sendiri untuk ganti Ayaka. Wildan yang setengah Otsutsuki adalah kunci ritual, karena darahnya.</p></div>
+  <div class="chapter-actions">
+    <button class="copy-btn" data-copy="chapter-4">Salin bagian</button>
+    <button class="focus-btn" data-focus="chapter-4">Fokus bagian</button>
+  </div>
+</article><article class="story-card" id="chapter-5" data-title="episode 5 final: daybreak cannon" data-index="5">
+  <div class="chapter-kicker">SEASON 1 • EPISODE 5</div>
+  <h2>EPISODE 5 FINAL: DAYBREAK CANNON</h2>
+  <div class="chapter-line"></div>
+  <div class="story-body"><p>Ritual dimulai. Nandayo berkhianat! Dia tikam Kaguya dari belakang, serap kekuatan Kaguya jadi Monster Bayangan Indigo Raksasa dengan aura biru tua tebal.</p>
+<p>Final Combo Akatsuki yang sudah lu tunggu:</p>
+<p>1. DYAS - Tebas monster jadi dua pakai Daybreak Excalibur - Final Dawn Slash</p>
+<p>2. SOFYAN - Terbang di antara belahan monster, hantamkan 2 Rasengan Hijau sekaligus ke jantungnya</p>
+<p>3. RAFA - Rantai Listrik raksasa ikat kepingan monster</p>
+<p>4. WILDAN x AYAKA - Ayaka APHP cium bibir Wildan (first kiss), kekuatannya berubah dari Moon Healing jadi Kunci Matahari. Cahayanya gabung dengan Petir Hitam Wildan jadi Petir Matahari. Wildan tembakkan Daybreak Cannon, hancurkan monster + bulan palsu.</p>
+<p>Ending: Bulan asli muncul, terang banget. Kaguya selamat jadi manusia biasa, minta maaf. Wildan resmi jadian sama Ayaka APHP. Dyas simpan pedangnya lagi, Rafa bikin pesta listrik, Sofyan dijuluki &quot;Green Flash of Daybreak&quot;.</p>
+<p>Post-Credit Season 2: Di dimensi Otsutsuki, 2 siluet baru lihat bumi hancur: &quot;Jadi... pedang cahaya itu bangkit lagi ya. Menarik.&quot;</p></div>
+  <div class="chapter-actions">
+    <button class="copy-btn" data-copy="chapter-5">Salin bagian</button>
+    <button class="focus-btn" data-focus="chapter-5">Fokus bagian</button>
+  </div>
+</article><article class="story-card" id="chapter-6" data-title="episode 8: wadah petir hitam" data-index="6">
+  <div class="chapter-kicker">SEASON 1 • EPISODE 8</div>
+  <h2>EPISODE 8: Wadah Petir Hitam</h2>
+  <div class="chapter-line"></div>
+  <div class="story-body"><p>Wildan hampir kerasukan Shibai. Ayaka APHP kunci Wildan dengan ciuman matahari, tapi dia pingsan. Sofyan bawa Ayaka terbang ke kuil bulan. Rafa vs Raiken masih berlanjut, Rafa tidak tega pukul kakaknya. Dyas dengan sisa tenaga tebas benang kontrol Shibai di punggung Raiken pakai serpihan cahaya pedangnya. Raiken bebas 10 detik, bilang &quot;Bunuh aku Rafa...&quot; sebelum dikendalikan lagi.</p></div>
+  <div class="chapter-actions">
+    <button class="copy-btn" data-copy="chapter-6">Salin bagian</button>
+    <button class="focus-btn" data-focus="chapter-6">Fokus bagian</button>
+  </div>
+</article><article class="story-card" id="chapter-7" data-title="episode 9-10: latihan daybreak" data-index="7">
+  <div class="chapter-kicker">SEASON 1 • EPISODE 9–10</div>
+  <h2>EPISODE 9-10: Latihan Daybreak</h2>
+  <div class="chapter-line"></div>
+  <div class="story-body"><p>Time-skip 6 hari. Tim pisah latihan:</p>
+<p>Wildan &amp; Ayaka di kuil, Ayaka ajarkan Wildan kontrol petir hitam jadi petir matahari.</p>
+<p>Sofyan latihan terbang di badai dimensi biar bisa bawa 3 orang sekaligus.</p>
+<p>FOKUS DUO: Dyas &amp; Rafa bikin pedang baru. Rafa lelehkan rantai listriknya, Dyas lelehkan cahaya pedangnya, mereka tempa jadi Pedang Kembar Volt-Excalibur - 2 pedang, 1 cahaya 1 listrik, cuma bisa dipakai kalau mereka pegangan tangan. Combo baru: Cross Slash - Salib Fajar bisa potong ingatan yang dicuci otak.</p></div>
+  <div class="chapter-actions">
+    <button class="copy-btn" data-copy="chapter-7">Salin bagian</button>
+    <button class="focus-btn" data-focus="chapter-7">Fokus bagian</button>
+  </div>
+</article><article class="story-card" id="chapter-8" data-title="episode 11: puncak bulan" data-index="8">
+  <div class="chapter-kicker">SEASON 1 • EPISODE 11</div>
+  <h2>EPISODE 11: Puncak Bulan</h2>
+  <div class="chapter-line"></div>
+  <div class="story-body"><p>Hari ke-7. Semua terbang ke bulan retak. Sofyan bawa semua terbang - scene yang lu minta, 4 Akatsuki terbang dengan bulan purnama belakang. Di puncak ada tahta Shibai dari tulang Otsutsuki. Shibai duduk, Raiken di samping jadi patung listrik putih.</p></div>
+  <div class="chapter-actions">
+    <button class="copy-btn" data-copy="chapter-8">Salin bagian</button>
+    <button class="focus-btn" data-focus="chapter-8">Fokus bagian</button>
+  </div>
+</article><article class="story-card" id="chapter-9" data-title="episode 12: dua saudara listrik" data-index="9">
+  <div class="chapter-kicker">SEASON 1 • EPISODE 12</div>
+  <h2>EPISODE 12: Dua Saudara Listrik</h2>
+  <div class="chapter-line"></div>
+  <div class="story-body"><p>Rafa vs Raiken final. Rafa tidak pakai listrik, pakai tinju. Setiap pukulan Rafa bilang kenangan kecil mereka. Raiken nangis listrik putihnya jadi hitam lagi. PLOT TWIST: Raiken bukan dicuci otak, dia SETUJU jadi bawahan Shibai karena Shibai janji akan hidupkan Rafa yang dulu hampir mati. Rafa teriak &quot;Aku tidak butuh diselamatkan dengan jadi budak!&quot; Combo Duo: Dyas lempar pedang cahaya ke Rafa, Rafa alirkan listrik, tebas kontrol di jantung Raiken. Raiken bebas!</p></div>
+  <div class="chapter-actions">
+    <button class="copy-btn" data-copy="chapter-9">Salin bagian</button>
+    <button class="focus-btn" data-focus="chapter-9">Fokus bagian</button>
+  </div>
+</article><article class="story-card" id="chapter-10" data-title="episode 13-15: shibai bangkit" data-index="10">
+  <div class="chapter-kicker">SEASON 1 • EPISODE 13–15</div>
+  <h2>EPISODE 13-15: Shibai Bangkit</h2>
+  <div class="chapter-line"></div>
+  <div class="story-body"><p>Shibai berdiri. Ternyata dia tidak punya tubuh, dia adalah bayangan bulan itu sendiri. Dia serap Raiken &amp; Rafa jadi baterai. Wildan mengamuk, Sofyan hantam Rasengan Hijau berkali-kali tapi tembus. Dyas tebas Shibai, pedangnya tembus juga. Kaguya datang (sudah tua) bilang kelemahan Shibai: &quot;Dia takut matahari terbit pertama, karena dia lahir dari malam abadi.&quot;</p></div>
+  <div class="chapter-actions">
+    <button class="copy-btn" data-copy="chapter-10">Salin bagian</button>
+    <button class="focus-btn" data-focus="chapter-10">Fokus bagian</button>
+  </div>
+</article><article class="story-card" id="chapter-11" data-title="episode 16: cinta aphp" data-index="11">
+  <div class="chapter-kicker">SEASON 1 • EPISODE 16</div>
+  <h2>EPISODE 16: Cinta APHP</h2>
+  <div class="chapter-line"></div>
+  <div class="story-body"><p>Ayaka APHP yang sekarat karena ritual, tiba-tiba bangkit. Dia bukan Kunci Matahari, dia adalah MATAHARINYA sendiri. Tapi untuk jadi matahari, dia harus mati. Wildan tidak setuju. Romance Puncak: Wildan lamaran di tengah perang pakai cincin petir. Ayaka bilang &quot;Kalau aku jadi matahari, aku akan selalu lihat kamu tiap pagi&quot;. Ciuman terakhir sebelum Ayaka terbang ke langit.</p></div>
+  <div class="chapter-actions">
+    <button class="copy-btn" data-copy="chapter-11">Salin bagian</button>
+    <button class="focus-btn" data-focus="chapter-11">Fokus bagian</button>
+  </div>
+</article><article class="story-card" id="chapter-12" data-title="episode 17-18: duo maut terbaik - dyas &amp; rafa final form" data-index="12">
+  <div class="chapter-kicker">SEASON 1 • EPISODE 17–18</div>
+  <h2>EPISODE 17-18: DUO MAUT TERBAIK - DYAS &amp; RAFA FINAL FORM</h2>
+  <div class="chapter-line"></div>
+  <div class="story-body"><p>Ini combo yang lu tunggu-tunggu bos.</p>
+<p>Shibai jadi gerhana raksasa mau telan bumi. Dyas &amp; Rafa &amp; Raiken (sekarang trio listrik) buat combo ultimate:</p>
+<p>NAMA: TRINITY VOLT EXCALIBUR - TIGA PETIR SATU CAHAYA</p>
+<p>Dyas di tengah, pegang pedang kembar.</p>
+<p>Rafa kiri, Raiken kanan, alirkan listrik hitam + putih jadi satu.</p>
+<p>Dyas gabungkan jadi pedang cahaya raksasa 1000 meter yang dialiri 2 listrik.</p>
+<p>Mereka bertiga terbang (Sofyan bawa), tebas gerhana Shibai dari ujung ke ujung.</p>
+<p>Tebasan itu tidak belah Shibai, tapi belah MALAM jadi SIANG. Untuk pertama kalinya di dimensi itu, matahari terbit.</p>
+<p>Shibai menjerit, tubuh bayangannya terbakar matahari.</p></div>
+  <div class="chapter-actions">
+    <button class="copy-btn" data-copy="chapter-12">Salin bagian</button>
+    <button class="focus-btn" data-focus="chapter-12">Fokus bagian</button>
+  </div>
+</article><article class="story-card" id="chapter-13" data-title="episode 19-20: angin penyelamat" data-index="13">
+  <div class="chapter-kicker">SEASON 1 • EPISODE 19–20</div>
+  <h2>EPISODE 19-20: Angin Penyelamat</h2>
+  <div class="chapter-line"></div>
+  <div class="story-body"><p>Sofyan jadi kunci. Dia sadar Rasengan Hijau Anginnya bisa bawa oksigen ke bulan. Dia terbang keliling bulan sambil bawa Ayaka yang sudah jadi bola matahari kecil, sebar cahaya ke seluruh retakan. Wildan di bawah, pakai petir mataharinya jadi penangkal, tarik semua Zetsu Putih ke atas untuk dibakar matahari.</p></div>
+  <div class="chapter-actions">
+    <button class="copy-btn" data-copy="chapter-13">Salin bagian</button>
+    <button class="focus-btn" data-focus="chapter-13">Fokus bagian</button>
+  </div>
+</article><article class="story-card" id="chapter-14" data-title="episode 21-22: wildan vs wadah" data-index="14">
+  <div class="chapter-kicker">SEASON 1 • EPISODE 21–22</div>
+  <h2>EPISODE 21-22: Wildan vs Wadah</h2>
+  <div class="chapter-line"></div>
+  <div class="story-body"><p>Shibai yang sekarat coba masuk tubuh Wildan (rencana awal). Wildan biarkan masuk! PLOT TWIST TERBESAR: Wildan dari awal tau dia wadah, jadi dia biarkan Shibai masuk, lalu dia kunci Shibai di dalam tubuhnya pakai segel petir hitam. Wildan bilang &quot;Kalau kau mau wadah, aku akan jadi penjara abadi untukmu&quot;. Dia hampir mati.</p></div>
+  <div class="chapter-actions">
+    <button class="copy-btn" data-copy="chapter-14">Salin bagian</button>
+    <button class="focus-btn" data-focus="chapter-14">Fokus bagian</button>
+  </div>
+</article><article class="story-card" id="chapter-15" data-title="episode 23: pedang terakhir dyas" data-index="15">
+  <div class="chapter-kicker">SEASON 1 • EPISODE 23</div>
+  <h2>EPISODE 23: Pedang Terakhir Dyas</h2>
+  <div class="chapter-line"></div>
+  <div class="story-body"><p>Dyas yang lihat Wildan sekarat, lakukan hal gila. Dia hancurkan pedang cahaya kembarnya, tusukkan pecahannya ke jantung Wildan. Bukan untuk bunuh, tapi untuk kasih cahaya abadi ke dalam tubuh Wildan biar Wildan bisa tahan Shibai di dalam. Dyas kehilangan pedangnya selamanya, jadi manusia biasa tanpa kekuatan.</p></div>
+  <div class="chapter-actions">
+    <button class="copy-btn" data-copy="chapter-15">Salin bagian</button>
+    <button class="focus-btn" data-focus="chapter-15">Fokus bagian</button>
+  </div>
+</article><article class="story-card" id="chapter-16" data-title="episode 24: fajar pertama" data-index="16">
+  <div class="chapter-kicker">SEASON 1 • EPISODE 24</div>
+  <h2>EPISODE 24: Fajar Pertama</h2>
+  <div class="chapter-line"></div>
+  <div class="story-body"><p>Ayaka yang sudah jadi matahari, turun pelan-pelan, peluk Wildan. Cahaya Ayaka + Cahaya Dyas di dalam Wildan + Listrik Rafa &amp; Raiken + Angin Sofyan = 5 elemen jadi satu. Shibai di dalam Wildan meledak dari dalam.</p></div>
+  <div class="chapter-actions">
+    <button class="copy-btn" data-copy="chapter-16">Salin bagian</button>
+    <button class="focus-btn" data-focus="chapter-16">Fokus bagian</button>
+  </div>
+</article><article class="story-card" id="chapter-17" data-title="episode 25: akatsuki daybreak - nama baru" data-index="17">
+  <div class="chapter-kicker">SEASON 1 • EPISODE 25</div>
+  <h2>EPISODE 25: Akatsuki Daybreak - Nama Baru</h2>
+  <div class="chapter-line"></div>
+  <div class="story-body"><p>Shibai mati, jadi debu bintang. Bulan retak sembuh jadi bulan purnama utuh tanpa retak. Ayaka kembali jadi manusia, tapi rambutnya jadi emas, tidak perak lagi. Wildan selamat, mata petir hitamnya jadi emas. Raiken jadi anggota Akatsuki ke-5.</p>
+<p>Dyas yang sudah tidak punya pedang, dikasih pedang baru oleh Kaguya - Pedang Kayu Kuil Bulan - lebih lemah tapi simbol dia sekarang penjaga, bukan pembunuh.</p></div>
+  <div class="chapter-actions">
+    <button class="copy-btn" data-copy="chapter-17">Salin bagian</button>
+    <button class="focus-btn" data-focus="chapter-17">Fokus bagian</button>
+  </div>
+</article><article class="story-card" id="chapter-18" data-title="episode 26: tamat season 1 - janji di bawah purnama" data-index="18">
+  <div class="chapter-kicker">SEASON 1 • EPISODE 26</div>
+  <h2>EPISODE 26: TAMAT SEASON 1 - Janji di Bawah Purnama</h2>
+  <div class="chapter-line"></div>
+  <div class="story-body"><p>Epilog 2 tahun kemudian. Akatsuki jadi legenda baik.</p>
+<p>Wildan &amp; Ayaka APHP nikah di bawah bulan purnama, Wildan jadi pemimpin desa baru.</p>
+<p>Rafa &amp; Raiken buka bengkel listrik, duo teknisi.</p>
+<p>Dyas jadi guru pedang cahaya, diam tapi dihormati.</p>
+<p>Sofyan? Dia yang di poster lu, masih terbang, jaga langit malam. Julukannya resmi: Sofyan - Green Wind of Daybreak. Scene terakhir: Sofyan terbang di depan bulan purnama, senyum, bawa surat dari Wildan: &quot;Jangan lupa pulang&quot;.</p>
+<p>POST CREDIT FINAL:
+Di dimensi yang jauh, ada 10 tahta kosong. 1 tahta Shibai hancur. 9 tahta lain menyala. Suara: &quot;Shibai gagal... Akatsuki Daybreak... menarik. Kita akan datang saat fajar berikutnya.&quot;</p>
+<p>TAMAT SEASON 1 - 26 EPISODE FULL.</p></div>
+  <div class="chapter-actions">
+    <button class="copy-btn" data-copy="chapter-18">Salin bagian</button>
+    <button class="focus-btn" data-focus="chapter-18">Fokus bagian</button>
+  </div>
+</article><article class="story-card" id="chapter-19" data-title="akatsuki daybreak: season 2 (26 episode)" data-index="19">
+  <div class="chapter-kicker">ECHOES OF THE VOID &amp; THE SHADOW COUNCIL</div>
+  <h2>AKATSUKI DAYBREAK: SEASON 2 (26 EPISODE)</h2>
+  <div class="chapter-line"></div>
+  <div class="story-body"><p>Boss, pilihan lu mantap banget! Fokus utama kita geser ke Sofyan si Green Wind of Daybreak bersama Pasukan Langit, menjelajahi batas dimensi luar, sementara di bumi terjadi pemberontakan faksi gelap dari sisa-sisa wadah lama yang mengincar 9 tahta kosong.</p>
+<p>Berikut draf lengkap 26 Episode Season 2 penuh aksi, pengkhianatan, dan pertempuran dimensi:</p></div>
+  <div class="chapter-actions">
+    <button class="copy-btn" data-copy="chapter-19">Salin bagian</button>
+    <button class="focus-btn" data-focus="chapter-19">Fokus bagian</button>
+  </div>
+</article><article class="story-card" id="chapter-20" data-title="arc 1: kebangkitan bayangan (episode 1 - 6)" data-index="20">
+  <div class="chapter-kicker">SEASON 2 • FOKUS: ANCAMAN INTERNAL</div>
+  <h2>ARC 1: KEBANGKITAN BAYANGAN (Episode 1 - 6)</h2>
+  <div class="chapter-line"></div>
+  <div class="story-body"><p>Fokus: Ancaman internal di bumi &amp; pergerakan awal Pasukan Langit.</p>
+<p>Episode 1: Langit Tanpa Retak
+Dua tahun setelah kekalahan Shibai. Dunia damai. Sofyan berpatroli di lapisan stratosfer tertinggi dengan sayap angin hijaunya. Tiba-tiba, sensor dimensi miliknya menangkap getaran aneh di titik bekas kuil bulan—ada anomali energi hitam yang merayap dari tanah.</p>
+<p>Episode 2: Faksi Sembilan Wadah
+Di bumi, muncul kelompok misterius bernama The Void Syndicate yang dipimpin oleh mantan-mantan wadah gagal eksperimen Otsutsuki masa lalu. Mereka berniat merebut sisa-sisa kekuatan Shibai yang tertanam di tubuh Wildan. Wildan yang kini hidup tenang bersama Ayaka (rambut emasnya) diserang mendadak di desa baru.</p>
+<p>Episode 3: Bengkel Listrik Bersaudara
+Rafa &amp; Raiken yang lagi sibuk di bengkel listrik diserbu pasukan boneka Zetsu Hitam versi baru. Duo teknisi ini unjuk gigi: Rafa pakai tinju tanpa listrik, Raiken melindunginya dengan perisai petir putih mutlak. Mereka berhasil melindungi warga, tapi sadar ini serangan terorganisir.</p>
+<p>Episode 4: Panggilan Darurat Langit
+Sofyan terbang secepat kilat dari angkasa luar ke desa Wildan setelah mendeteksi sinyal darurat. Dengan jurus Green Wind Domain, Sofyan menyapu bersih pasukan bayangan, tapi pemimpin sindikat melarikan diri lewat portal dimensi gelap.</p>
+<p>Episode 5: Kembalinya Sang Guru Pedang
+Dyas yang sudah hidup sebagai manusia biasa tanpa pedang cahaya (cuma pakai pedang kayu kuil) melatih generasi muda desa. Ketika markas mereka diintai pembunuh bayaran faksi gelap, Dyas membuktikan bahwa insting bertarungnya tanpa kekuatan sihir jauh lebih mematikan.</p>
+<p>Episode 6: Rapat Darurat Akatsuki
+Kelima anggota inti Akatsuki Daybreak (Wildan, Ayaka, Rafa, Raiken, Dyas) berkumpul di bawah pohon suci. Mereka sepakat: ancaman ini bukan cuma di bumi, tapi terhubung langsung dengan sinyal misterius dari luar angkasa yang dipantau Sofyan.</p></div>
+  <div class="chapter-actions">
+    <button class="copy-btn" data-copy="chapter-20">Salin bagian</button>
+    <button class="focus-btn" data-focus="chapter-20">Fokus bagian</button>
+  </div>
+</article><article class="story-card" id="chapter-21" data-title="arc 2: ekspedisi dimensi luar (episode 7 - 13)" data-index="21">
+  <div class="chapter-kicker">SEASON 2 • PASUKAN LANGIT</div>
+  <h2>ARC 2: EKSPEDISI DIMENSI LUAR (Episode 7 - 13)</h2>
+  <div class="chapter-line"></div>
+  <div class="story-body"><p>Fokus: Sofyan memimpin Pasukan Langit menembus batas galaksi paralel.</p>
+<p>Episode 7: Gerbang Galaksi Ketiga
+Sofyan memimpin misi peninjauan keluar angkasa bersama armada Pasukan Langit binaannya. Mereka menembus Galaksi Ketiga, tempat di mana 9 tahta kosong Otsutsuki bersemayam.</p>
+<p>Episode 8: Badai Bintang Hitam
+Kapal udara dimensi Sofyan dihantam badai gravitasi kosmik. Sofyan harus terbang solo menerobos badai untuk menstabilkan inti kapal, menciptakan Green Wind Singularity yang menyelamatkan seluruh awak pasukannya.</p>
+<p>Episode 9: Planet Reruntuhan Tahta
+Sofyan mendarat di planet asal 9 tahta kosong. Di sana, dia menemukan artefak kuno berupa cermin memori yang merekam asal-usul 9 Dewa Otsutsuki pembangkang yang menciptakan faksi gelap di bumi.</p>
+<p>Episode 10: Pengkhianatan di Garis Depan
+Di bumi, Faksi Sindikat memanfaatkan absennya Sofyan untuk menculik Ayaka APHP. Mereka butuh darah Murni Sang Matahari untuk membuka segel tahta pertama di bumi. Wildan mengamuk hebat, mata petir emasnya menyala terang.</p>
+<p>Episode 11: Kemarahan Sang Wadah
+Wildan sendirian menyerbu markas bawah tanah Faksi Sindikat. Kontrol petir hitam dan mataharinya mencapai tingkat sempurna. Dia menghancurkan separuh markas musuh tanpa ampun demi menyelamatkan Ayaka.</p>
+<p>Episode 12: Kontak Antar-Dimensi
+Sofyan yang berada di luar angkasa berhasil mengirim sinyal kuantum lewat bantuan pantulan cahaya bulan ke bumi, memberi tahu Wildan bahwa pemimpin utama Faksi Sindikat di bumi dikendalikan dari jarak jauh oleh salah satu entitas di 9 Tahta.</p>
+<p>Episode 13: Reuni di Puncak Awan
+Sofyan kembali dari luar angkasa dengan membawa pecahan energi kosmik. Akatsuki Daybreak bersatu kembali, bersiap menghadapi perang total melawan sisa faksi gelap di bumi yang didukung kekuatan dari tahta luar.</p></div>
+  <div class="chapter-actions">
+    <button class="copy-btn" data-copy="chapter-21">Salin bagian</button>
+    <button class="focus-btn" data-focus="chapter-21">Fokus bagian</button>
+  </div>
+</article><article class="story-card" id="chapter-22" data-title="arc 3: perang faksi gelap &amp; bumi (episode 14 - 20)" data-index="22">
+  <div class="chapter-kicker">SEASON 2 • PERANG TOTAL</div>
+  <h2>ARC 3: PERANG FAKSI GELAP &amp; BUMI (Episode 14 - 20)</h2>
+  <div class="chapter-line"></div>
+  <div class="story-body"><p>Fokus: Pertempuran habis-habisan di permukaan bumi.</p>
+<p>Episode 14: Invasi Kota Metropolitan Baru
+Faksi Sindikat melancarkan serangan serentak ke seluruh kota utama. Mereka membangkitkan monster raksasa buatan dari sisa DNA Otsutsuki. Dunia panik, militer biasa tidak berdaya.</p>
+<p>Episode 15: Duet Maut: Bengkel Volt-Excalibur
+Rafa &amp; Raiken turun tangan di garda depan kota. Kombinasi pukulan tanpa ampun Rafa dan aliran listrik kembar putih-hitam Raiken membersihkan ribuan pasukan bayangan dalam hitungan menit.</p>
+<p>Episode 16: Pelajaran Sang Guru
+Dyas menghadapi mantan murid yang membelot ke faksi gelap. Pertarungan pedang kayu vs pedang iblis. Dyas menang telak lewat teknik tebasan tanpa niat membunuh, menyadarkan sang murid sebelum ambruk.</p>
+<p>Episode 17: Ritual Gerhana Buatan
+Pemimpin Faksi Sindikat berhasil menculik inti energi bulan dan mencoba melakukan gerhana total kedua di atas markas besar bumi. Ayaka APHP maju ke garis depan, menolak bersembunyi.</p>
+<p>Episode 18: Cinta, Petir, dan Matahari
+Wildan dan Ayaka berdampingan melawan pemimpin Sindikat. Ayaka memancarkan cahaya matahari penuh, sementara Wildan membungkusnya dengan perisai petir emas terkuat. Pertarungan sengit menghancurkan langit-langit kubah markas musuh.</p>
+<p>Episode 19: Tiang Pancang Langit
+Untuk menghentikan gerhana buatan, Sofyan melesat ke atmosfer atas bumi. Dia menggunakan seluruh kekuatan angin hijaunya untuk menahan jatuhnya inti bulan, mempertaruhkan nyawanya sendiri di atas langit.</p>
+<p>Episode 20: Kehancuran Sindikat
+Dengan gabungan kekuatan Wildan, Ayaka, Rafa, Raiken, Dyas, dan dorongan angin kosmik dari Sofyan, markas dan pemimpin Faksi Sindikat hancur lebur jadi debu. Bumi kembali aman untuk sementara.</p></div>
+  <div class="chapter-actions">
+    <button class="copy-btn" data-copy="chapter-22">Salin bagian</button>
+    <button class="focus-btn" data-focus="chapter-22">Fokus bagian</button>
+  </div>
+</article><article class="story-card" id="chapter-23" data-title="arc 4: eksplorasi tiada akhir (episode 21 - 26)" data-index="23">
+  <div class="chapter-kicker">SEASON 2 • EPILOG &amp; MISTERI</div>
+  <h2>ARC 4: EKSPLORASI TIADA AKHIR (Episode 21 - 26)</h2>
+  <div class="chapter-line"></div>
+  <div class="story-body"><p>Fokus: Rekonsiliasi, transisi kekuatan, dan misteri akhir.</p>
+<p>Episode 21: Pemulihan Dunia
+Dunia merayakan kemenangan kedua Akatsuki Daybreak. Monumen peringatan didirikan di tempat Sofyan menahan langit. Hubungan Wildan dan Ayaka semakin harmonis sebagai pemimpin spiritual desa baru.</p>
+<p>Episode 22: Generasi Baru Akatsuki
+Rafa dan Raiken meresmikan Akademi Kelistrikan &amp; Teknologi Dunia, melatih anak-anak muda memanfaatkan energi alam dengan aman.</p>
+<p>Episode 23: Jalan Damai Dyas
+Dyas menolak posisi tinggi di pemerintahan baru, memilih berkeliling dunia sebagai pengelana damai yang mengajarkan filosofi ketenangan pedang kayu.</p>
+<p>Episode 24: Langit Baru Sofyan
+Sofyan resmi diangkat sebagai Komandan Tertinggi Pasukan Eksplorasi Langit. Dia membangun mercusuar kosmik pertama di atas awan tertinggi untuk memantau ancaman dari galaksi luar.</p>
+<p>Episode 25: Surat dari Angkasa
+Adegan emosional: Wildan menerima surat burung merpati pos berenergi angin dari Sofyan yang sedang patroli di luar angkasa. Isinya: &quot;Bumi aman di bawah kalian, jagalah fajar ini. Aku akan terus terbang lebih jauh.&quot;</p>
+<p>Episode 26: TAMAT SEASON 2 - Bayangan di Tahta Kedua
+Epilog damai: Semua anggota Akatsuki tersenyum menatap langit malam yang tenang.</p>
+<p>POST CREDIT FINAL SEASON 2: Di galaksi terjauh, Tahta Kedua dari 9 Tahta Kosong tiba-tiba retak dan menyala terang benderang. Siluet sosok dewa kosmik berambut perak membuka mata, tersenyum sinis sambil berkata: &quot;Wadah di bumi sudah kuat... saatnya sang Pencipta turun tangan.&quot;</p></div>
+  <div class="chapter-actions">
+    <button class="copy-btn" data-copy="chapter-23">Salin bagian</button>
+    <button class="focus-btn" data-focus="chapter-23">Fokus bagian</button>
+  </div>
+</article><article class="story-card" id="chapter-24" data-title="akatsuki the movie: echo of the four kingdoms" data-index="24">
+  <div class="chapter-kicker">FINAL CANON VERSION</div>
+  <h2>AKATSUKI THE MOVIE: ECHO OF THE FOUR KINGDOMS</h2>
+  <div class="chapter-line"></div>
+  <div class="story-body"><p>Bumi punya 4 jantung, 4 kerajaan. Kazangu Kerajaan Api, Naeris Kerajaan Air, Ghael Kerajaan Tanah, Vayra Kerajaan Angin. Di setiap kerajaan ada Inti Elemental. Nezarkos, The Star Devourer, alien 4 meter dengan armor meteor hidup dan 6 mata datang untuk memakan 4 inti itu agar berevolusi jadi dewa. Dia bukan meteor, dia adalah lubang gravitasi yang berjalan.</p></div>
+  <div class="chapter-actions">
+    <button class="copy-btn" data-copy="chapter-24">Salin bagian</button>
+    <button class="focus-btn" data-focus="chapter-24">Fokus bagian</button>
+  </div>
+</article><article class="story-card" id="chapter-25" data-title="fight 1: jatuhnya kazangu - dyas vs masa lalu [menit 0-15]" data-index="25">
+  <div class="chapter-kicker">MOVIE • FIGHT 1</div>
+  <h2>FIGHT 1: JATUHNYA KAZANGU - DYAS VS MASA LALU [Menit 0-15]</h2>
+  <div class="chapter-line"></div>
+  <div class="story-body"><p>Kazangu diserang pertama. 10.000 prajurit api membakar langit, tapi api mereka membeku di depan Nezarkos karena gravitasi. Raja Kazangu, ayah angkat Dyas, maju dengan pedang apinya. Nezarkos melipat gravitasi, raja hancur jadi bola besi. Inti Api keserap, dada Nezarkos menyala merah.</p>
+<p>Dyas yang melihat siaran itu dari Vayra diam-diam kembali ke Kazangu yang sudah jadi kawah kaca. Di sana Nezarkos belum pergi, dia sedang mencerna Inti Api. Dyas mencabut pedang warisan ayahnya, tapi pedang api itu meleleh di dekat Nezarkos. Dyas marah, dia patahkan pedang api itu dan dari patahannya keluar cahaya putih murni. Untuk pertama kalinya pedang cahaya Dyas bangkit, Kazangu Legacy: Photon Blade. Pedang cahaya yang tidak punya massa, hanya cahaya yang dipadatkan. Dyas tebas, cahaya itu tidak bisa ditahan gravitasi, untuk pertama kalinya armor Nezarkos terbelah dan mengeluarkan darah hitam bercahaya. Nezarkos kaget, dia pukul Dyas dengan ledakan supernova mini dari Inti Api, Dyas terpental sampai keluar atmosfer Kazangu, pedang cahayanya retak tapi masih menyala. Nezarkos pergi, Dyas selamat karena cahayanya melindunginya. Dia sadar, cahaya adalah satu-satunya yang tidak bisa dimakan gravitasi.</p></div>
+  <div class="chapter-actions">
+    <button class="copy-btn" data-copy="chapter-25">Salin bagian</button>
+    <button class="focus-btn" data-focus="chapter-25">Fokus bagian</button>
+  </div>
+</article><article class="story-card" id="chapter-26" data-title="fight 2: badai di naeris - sofyan &amp; wildan, angin dan listrik [menit 15-35]" data-index="26">
+  <div class="chapter-kicker">MOVIE • FIGHT 2</div>
+  <h2>FIGHT 2: BADAI DI NAERIS - SOFYAN &amp; WILDAN, ANGIN DAN LISTRIK [Menit 15-35]</h2>
+  <div class="chapter-line"></div>
+  <div class="story-body"><p>Nezarkos turun ke Naeris, kota di dalam gelembung air raksasa di dasar laut. Wildan sudah menunggu di dalam gelembung. Dia tidak pakai air, dia pakai listrik. Dia menempelkan kedua tangannya ke dinding gelembung dan melepaskan Naeris: Thunder Dome - 100 Juta Volt. Seluruh gelembung kota berubah menjadi sangkar listrik raksasa, petir menyambar-nyambar di dalam air. Nezarkos masuk, listrik itu tidak melukainya, tapi memperlambat gravitasinya karena listrik mengganggu medan magnetnya.</p>
+<p>Di atas permukaan laut, Sofyan melayang. Dia melihat sahabatnya berjuang di bawah. Dia mengangkat kedua tangannya dan menciptakan badai, Vayra: Eye of The Storm. Dia tidak menyerang Nezarkos langsung, dia mengosongkan udara di atas laut Naeris, menciptakan vakum raksasa. Air laut naik ke atas karena vakum itu, membentuk tornado air setinggi 5 kilometer yang menghubungkan langit dan dasar laut.</p>
+<p>Wildan melihat itu, dia mengerti. Dia mengalirkan semua listriknya ke tornado air yang dibuat Sofyan. Air + Listrik + Angin = Combo: Storm Emperor's Spear. Tornado air itu berubah menjadi tombak petir raksasa yang berputar dengan angin Sofyan. Tombak itu menembus gelembung Naeris dan menghantam dada Nezarkos, menembus Inti Api dan Inti Air yang baru dia ambil, membuat dua inti itu korslet. Nezarkos berteriak, untuk pertama kalinya dia merasakan listrik masuk ke jantungnya. Dia marah, dia meledakkan dua inti itu bersamaan, ledakan uap dan api yang menguapkan setengah Naeris. Sofyan menarik Wildan yang kehabisan listrik dengan anginnya dan kabur. Inti Air lepas dan masuk ke dada Nezarkos, sekarang dia punya dua inti tapi retak karena korslet listrik Wildan.</p></div>
+  <div class="chapter-actions">
+    <button class="copy-btn" data-copy="chapter-26">Salin bagian</button>
+    <button class="focus-btn" data-focus="chapter-26">Fokus bagian</button>
+  </div>
+</article><article class="story-card" id="chapter-27" data-title="fight 3: pertahanan ghael - rafa sang pendekar petir [menit 35-55]" data-index="27">
+  <div class="chapter-kicker">MOVIE • FIGHT 3</div>
+  <h2>FIGHT 3: PERTAHANAN GHAEL - RAFA SANG PENDEKAR PETIR [Menit 35-55]</h2>
+  <div class="chapter-line"></div>
+  <div class="story-body"><p>Ghael, benteng besi. Semua prajurit kabur. Rafa sendirian di gerbang dengan pedang katana hitamnya yang belum menyala.</p>
+<p>Nezarkos mengirim 10.000 golem gravitasi. Rafa mencabut pedangnya pelan. Pedangnya tidak menyala api, tapi berderak, crack. Listrik statis. Rafa adalah pedang petir, dia tidak memanipulasi listrik seperti Wildan, dia ADALAH petir yang berbentuk pedang.</p>
+<p>Fight ini adalah fight koreografi pedang tercepat di film. Rafa berlari, setiap langkahnya meninggalkan jejak petir. Ghael Sword Style: First Form - Lightning Draw. Satu tebasan, 100 golem terbelah dan hangus jadi kaca karena panas petir 30.000 derajat. Dia terus bergerak, Second Form - Thunder Chain, pedangnya dilempar dan memantul di antara golem seperti petir yang memantul, kembali ke tangannya. Selama 7 hari montase, Rafa tidak tidur, dia menjadi kilat yang menjaga Ghael. Gunung-gunung di sekitarnya hangus hitam karena sambaran petirnya.</p>
+<p>Hari ke-7, Nezarkos datang sendiri. Rafa sudah kelelahan, pedang petirnya redup. Nezarkos mengangkat gunung besi Ghael dengan gravitasi dan menjatuhkannya ke Rafa. Rafa melihat gunung itu jatuh, dia tancapkan pedangnya ke tanah, dan berteriak Final Form: Heavenly Thunder Pillar. Dia memanggil petir dari langit Vayra yang ada di atas Ghael, petir ungu raksasa menyambar pedangnya dan naik ke atas menghancurkan gunung yang jatuh itu menjadi debu besi. Ledakan petir dan gravitasi bertabrakan, seluruh Ghael meledak cahaya putih. Ketika cahaya hilang, Rafa berlutut, pedangnya patah setengah, tubuhnya hangus, tapi dia masih berdiri. Nezarkos berjalan melewatinya, mengambil Inti Tanah di bawah kakinya. Rafa mencoba tebas terakhir, Nezarkos pukul dia dengan gravitasi sampai terpental jauh. Nezarkos sekarang punya 3 inti, tapi tubuhnya bocor listrik karena pertarungan dengan Rafa dan Wildan, armornya retak mengeluarkan petir liar.</p></div>
+  <div class="chapter-actions">
+    <button class="copy-btn" data-copy="chapter-27">Salin bagian</button>
+    <button class="focus-btn" data-focus="chapter-27">Fokus bagian</button>
+  </div>
+</article><article class="story-card" id="chapter-28" data-title="fight 4: invasi cahaya - dyas di kapal induk [menit 55-70]" data-index="28">
+  <div class="chapter-kicker">MOVIE • FIGHT 4</div>
+  <h2>FIGHT 4: INVASI CAHAYA - DYAS DI KAPAL INDUK [Menit 55-70]</h2>
+  <div class="chapter-line"></div>
+  <div class="story-body"><p>Dyas tidak ikut ke Ghael, dia terbang ke orbit, ke kapal induk Nezarkos sebesar bulan yang terbuat dari tulang bintang. Kapal itu tidak punya cahaya, hanya gelap dan gravitasi.</p>
+<p>Di dalam kapal, dijaga Star Hive, anak-anak Nezarkos. Dyas masuk dengan pedang cahayanya yang sudah diperbaiki. Di tempat gelap, pedang cahaya Dyas adalah satu-satunya cahaya. Setiap tebasan Dyas bukan memotong, tapi membelah kegelapan itu sendiri. Photon Blade Style: Light Refraction, dia membelokkan cahaya pedangnya ke dinding kapal yang hidup, cahaya itu memantul dan membakar puluhan Hive sekaligus dari dalam.</p>
+<p>Di inti kapal, Dyas menemukan jantung kapal adalah Inti Api yang asli yang belum dicerna. Dia menusukkan pedang cahayanya ke jantung itu, cahaya Dyas masuk dan menginfeksi Inti Api itu dengan cahaya murni. Dia menanam bom cahaya, Nova Core: Daylight Bomb, dan kabur. Kapal induk meledak setengah, ledakan cahaya itu terlihat dari bumi seperti matahari kedua terbit di malam hari. Ledakan itu merambat lewat koneksi gravitasi dan melukai Nezarkos yang ada di bumi, membuat 3 inti di dadanya semakin retak dan tidak stabil. Dyas jatuh kembali ke bumi seperti komet cahaya.</p></div>
+  <div class="chapter-actions">
+    <button class="copy-btn" data-copy="chapter-28">Salin bagian</button>
+    <button class="focus-btn" data-focus="chapter-28">Fokus bagian</button>
+  </div>
+</article><article class="story-card" id="chapter-29" data-title="fight 5: skyfall vayra - awakening &amp; helios cannon [menit 70-90]" data-index="29">
+  <div class="chapter-kicker">MOVIE • FIGHT 5 • FINAL</div>
+  <h2>FIGHT 5: SKYFALL VAYRA - AWAKENING &amp; HELIOS CANNON [Menit 70-90]</h2>
+  <div class="chapter-line"></div>
+  <div class="story-body"><p>Final. Vayra, kampung halaman Sofyan. Nezarkos dengan 3 inti retak dan bocor petir dan cahaya menancapkan 3 inti itu ke pulau utama Vayra dan memutar gravitasi. Pulau-pulau Vayra yang melayang ribuan tahun mulai jatuh. Langit terbalik, laut di atas kepala.</p>
+<p>Sofyan, Wildan, Rafa yang diseret Dyas, dan Dyas berkumpul di pulau terakhir. Nezarkos pakai Trinity Gravity Devour, menarik elemen dari tubuh mereka. Sofyan sesak karena angin ditarik dari paru-paru, Wildan kejang karena listriknya ditarik, Rafa pedang petirnya padam karena gravitasi, Dyas cahayanya redup.</p>
+<p>Pulau terakhir jatuh. Sofyan lihat rumah ibunya dengan lampu kecil masih nyala. Dia rindu, bukan marah. Dia lepas semua penahan anginnya dan berteriak. Inti Angin yang bersembunyi ribuan tahun keluar dan masuk ke dada Sofyan. Cahaya itu picu awakening semua.</p>
+<p>Sofyan Awakening: Vayra Storm Sovereign, rambut hitam hijau jadi putih kehijauan menyala, di punggungnya sayap angin transparan, dia bukan kendalikan angin, dia jadi badai hidup. Rafa Awakening: Ghael Thunder God, pedang petirnya yang patah menyatu dengan tubuhnya, seluruh tubuhnya jadi petir hidup, matanya petir, setiap langkah petir menyambar. Wildan Awakening: Naeris Lightning Monarch, tubuhnya berubah jadi manusia listrik murni, 1 miliar volt mengalir di nadinya, dia melayang karena elektromagnetik. Dyas Awakening: Kazangu Light Seraph, pedang cahayanya membesar jadi 10 meter, di punggungnya 6 sayap cahaya, dadanya jadi matahari putih.</p>
+<p>Mereka serang. Rafa jadi petir, dia berlari mengelilingi Nezarkos 100 kali dalam 1 detik, Thunder God: Infinite Lightning Slash, setiap tebasan meninggalkan luka petir yang tidak bisa sembuh karena listrik. Wildan mengangkat semua air laut yang tumpah di langit dan mengubahnya jadi konduktor, Lightning Monarch: World Wide Thunderstorm, seluruh langit Vayra jadi badai petir, ribuan petir menyambar Nezarkos bersamaan, membuat 3 inti di dadanya korslet total. Sofyan terbang tinggi dan menciptakan Storm Sovereign: Vacuum Annihilation, dia hapus udara di sekitar Nezarkos, membuat gravitasi Nezarkos tidak bisa menyebar karena tidak ada medium. Dyas tebas dengan pedang cahaya raksasanya, Seraph: Photon Judgement, membelah armor hidup Nezarkos jadi dua.</p>
+<p>Nezarkos sekarat tapi masih hidup, dia gabung 3 inti retak jadi bola hitam seukuran pulau, Trinity Annihilation Star, untuk hapus Vayra.</p>
+<p>Dyas tahu ini akhir. Dia terbang paling tinggi di atas bola itu, buka dadanya, 6 sayap cahayanya melebar dan berteriak &quot;KASIH GUE SEMUANYA!&quot;.</p>
+<p>Sofyan, Rafa, Wildan mengerti, mereka salurkan semua energi awakening. Petir, Listrik, Angin masuk ke matahari di dada Dyas. Wujud dewa mereka hilang, kembali jadi manusia pingsan, jatuh ditahan angin terakhir Sofyan. Matahari di dada Dyas membesar sebesar bulan, warnanya putih, emas, dengan petir dan angin berputar di dalamnya.</p>
+<p>Dyas menatap Nezarkos dan berkata dengan suara ayah angkatnya, &quot;Kau makan tiga kerajaan, sekarang coba telan matahari ini&quot;.</p>
+<p>JURUS FINAL: JUDGEMENT OF THE FALLEN STAR - HELIOS ANNIHILATION CANNON.</p>
+<p>Dari dada Dyas melesat pilar cahaya kolosal selebar Kerajaan Vayra, bukan laser tipis, tapi pilar cahaya murni yang di dalamnya ada petir Rafa, listrik Wildan, dan angin Sofyan yang berputar. Pilar itu berwarna putih emas dengan petir hijau dan biru di sisinya. Sebelum mengenai Nezarkos, Sofyan setengah sadar dorong Inti Angin ke dalam pilar itu.</p>
+<p>Nezarkos angkat bola kehancuran dan tameng gravitasi 3 inti. Pilar cahaya tabrak. Tidak ada ledakan, hanya senyap keras. Tameng gravitasi retak, 3 inti pecah, Api padam, Air menguap, Tanah jadi debu. Armor hidup terkelupas, 6 mata pecah, dia berteriak &quot;PANAS&quot; bahasa manusia. Cahaya itu dorong dia naik dari langit Vayra, tembus atmosfer, sampai luar angkasa, sampai dia titik hitam kecil di dalam matahari buatan itu, lalu hilang jadi debu cahaya.</p>
+<p>Cahaya itu menyilaukan bumi 10 detik. Ketika hilang, langit Vayra biru kembali, pulau-pulau yang jatuh kembali melayang pelan.</p>
+<p>Epilog sebulan kemudian. 4 kerajaan bangun bersama. Di tengah Vayra dibangun patung 4 orang dengan jubah Akatsuki robek, Sofyan di depan dengan pusaran angin di tangan, Dyas di samping dengan pedang cahaya berasap, Rafa dengan pedang petir retak, Wildan dengan listrik mengalir di kaki. Di bawahnya tertulis: Dianggap Anggota Terlemah, Ternyata Penjaga Dunia. Kamera naik, 4 Inti Elemental melayang bersama di atas patung, dan di kejauhan cahaya hijau kecil masih menyala di dada Sofyan, pedang petir Rafa masih berderak pelan, listrik Wildan masih menyambar-nyambar kecil, dan pedang cahaya Dyas masih menyala redup.</p></div>
+  <div class="chapter-actions">
+    <button class="copy-btn" data-copy="chapter-29">Salin bagian</button>
+    <button class="focus-btn" data-focus="chapter-29">Fokus bagian</button>
+  </div>
+</article>
+          <div id="empty" class="empty hidden">Tidak ada bagian yang cocok dengan pencarian.</div>
+        </div>
+      </div>
+    </section>
+  </main>
 
-<footer>
-  AKATSUKI THE MOVIE • ECHO OF THE FOUR KINGDOMS • FAN STORY PROJECT
-</footer>
+  <footer class="footer">
+    <p><strong>AKATSUKI DAYBREAK</strong></p>
+    <p>Arsip cerita interaktif • `intro.mp4` dan `photo1.jpg` dibaca dari folder yang sama dengan file ini.</p>
+    <p>Episode 7 Season 1 tidak ditambahkan sebagai cerita baru karena teks Episode 7 tidak terdapat pada materi yang dikirim.</p>
+  </footer>
+</div>
 
-<button id="top" aria-label="Kembali ke atas">↑</button>
+<button class="backtop" id="backTop" aria-label="Kembali ke atas">↑</button>
+<div class="toast" id="toast">Tersalin</div>
+<div class="focus-overlay" id="focusOverlay">
+  <div class="focus-inner">
+    <button class="focus-close" id="focusClose">Tutup mode fokus ✕</button>
+    <div class="focus-content" id="focusContent"></div>
+  </div>
+</div>
 
 <script>
-(function(){
-  const video = document.getElementById("introVideo");
-  const nav = document.getElementById("nav");
-  const topBtn = document.getElementById("top");
-  const progress = document.getElementById("progress");
+const $ = (s, root=document) => root.querySelector(s);
+const $$ = (s, root=document) => [...root.querySelectorAll(s)];
+const cards = $$('.story-card');
+const navItems = $$('.nav-item');
+const search = $('#search');
+const empty = $('#empty');
+const countLabel = $('#countLabel');
+const toast = $('#toast');
+const video = $('#introVideo');
+const progressBar = $('#progressBar');
+const backTop = $('#backTop');
+let activeFilter = 'all';
 
-  // Pastikan video tetap mute agar autoplay diperbolehkan browser.
-  video.muted = true;
-  video.setAttribute("muted","");
-  video.setAttribute("playsinline","");
-  video.setAttribute("autoplay","");
-  video.setAttribute("loop","");
+function showToast(message) {
+  toast.textContent = message;
+  toast.classList.add('show');
+  clearTimeout(window.__toastTimer);
+  window.__toastTimer = setTimeout(() => toast.classList.remove('show'), 1600);
+}
 
-  const tryPlay = () => {
-    video.muted = true;
-    const p = video.play();
-    if(p && p.catch) p.catch(()=>{});
-  };
-  tryPlay();
-  window.addEventListener("load", tryPlay, {once:true});
+function scrollToId(id) {
+  const el = document.getElementById(id);
+  if (!el) return;
+  el.scrollIntoView({behavior:'smooth', block:'start'});
+}
 
-  window.addEventListener("scroll",()=>{
-    const max = document.documentElement.scrollHeight - innerHeight;
-    progress.style.width = (max > 0 ? (scrollY/max)*100 : 0) + "%";
-    nav.classList.toggle("scrolled", scrollY > 30);
-    topBtn.classList.toggle("show", scrollY > 600);
-  },{passive:true});
+function classify(card) {
+  const text = card.textContent.toLowerCase();
+  if (text.includes('season 2')) return 'season2';
+  if (text.includes('movie')) return 'movie';
+  return 'season1';
+}
 
-  topBtn.addEventListener("click",()=>scrollTo({top:0,behavior:"smooth"}));
-
-  const observer = new IntersectionObserver((entries)=>{
-    entries.forEach(entry=>{
-      if(entry.isIntersecting) entry.target.classList.add("visible");
-    });
-  },{threshold:.08});
-  document.querySelectorAll(".reveal").forEach(el=>observer.observe(el));
-
-  // Navigasi keyboard sederhana.
-  document.addEventListener("keydown",(e)=>{
-    if(e.key === "Home" && !e.ctrlKey){
-      scrollTo({top:0,behavior:"smooth"});
-    }
+function applyFilter() {
+  const q = search.value.trim().toLowerCase();
+  let shown = 0;
+  cards.forEach(card => {
+    const matchesText = !q || card.textContent.toLowerCase().includes(q);
+    const matchesFilter = activeFilter === 'all' || classify(card) === activeFilter;
+    const visible = matchesText && matchesFilter;
+    card.classList.toggle('hidden', !visible);
+    if (visible) shown++;
   });
-})();
+  empty.classList.toggle('hidden', shown !== 0);
+  countLabel.textContent = shown + ' BAGIAN TERLIHAT';
+}
+
+search.addEventListener('input', applyFilter);
+$$('.filter').forEach(btn => btn.addEventListener('click', () => {
+  activeFilter = btn.dataset.filter;
+  $$('.filter').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+  applyFilter();
+}));
+
+navItems.forEach(item => item.addEventListener('click', () => scrollToId(item.dataset.target)));
+
+const observer = new IntersectionObserver(entries => {
+  entries.forEach(entry => {
+    if (!entry.isIntersecting) return;
+    navItems.forEach(n => n.classList.toggle('active', n.dataset.target === entry.target.id));
+  });
+}, {rootMargin:'-25% 0px -65% 0px', threshold:0});
+cards.forEach(card => observer.observe(card));
+
+window.addEventListener('scroll', () => {
+  const max = document.documentElement.scrollHeight - innerHeight;
+  const pct = max > 0 ? (scrollY / max) * 100 : 0;
+  progressBar.style.width = pct + '%';
+  backTop.classList.toggle('show', scrollY > 600);
+}, {passive:true});
+
+backTop.addEventListener('click', () => scrollToId('top'));
+$('#startBtn').addEventListener('click', () => scrollToId('story'));
+$('#playBtn').addEventListener('click', async () => {
+  video.currentTime = 0;
+  try { await video.play(); showToast('Intro diputar ulang'); } catch(e) { showToast('Autoplay diblokir browser'); }
+});
+$('#muteBtn').addEventListener('click', async () => {
+  video.muted = !video.muted;
+  $('#muteBtn').textContent = video.muted ? '🔇 Mute aktif' : '🔊 Suara aktif';
+  if (!video.muted) { try { await video.play(); } catch(e) {} }
+});
+
+$('#toggleSidebar').addEventListener('click', () => {
+  $('#sidebar').scrollIntoView({behavior:'smooth', block:'start'});
+});
+
+$('#randomBtn').addEventListener('click', () => {
+  const visible = cards.filter(c => !c.classList.contains('hidden'));
+  if (!visible.length) return showToast('Tidak ada scene yang cocok');
+  const pick = visible[Math.floor(Math.random()*visible.length)];
+  pick.scrollIntoView({behavior:'smooth', block:'center'});
+  pick.animate([{boxShadow:'0 0 0 2px rgba(229,9,47,.9), 0 20px 80px rgba(229,9,47,.3)'},{boxShadow:'0 18px 55px rgba(0,0,0,.25)'}], {duration:1000});
+});
+
+function makeFocus(card) {
+  const clone = card.cloneNode(true);
+  clone.querySelectorAll('.chapter-actions').forEach(x => x.remove());
+  $('#focusContent').replaceChildren(clone);
+  $('#focusOverlay').classList.add('open');
+  document.body.classList.add('no-scroll');
+}
+
+$$('.focus-btn').forEach(btn => btn.addEventListener('click', () => makeFocus(document.getElementById(btn.dataset.focus))));
+$('#focusClose').addEventListener('click', () => {
+  $('#focusOverlay').classList.remove('open');
+  document.body.classList.remove('no-scroll');
+});
+$('#focusOverlay').addEventListener('click', e => { if (e.target.id === 'focusOverlay') $('#focusClose').click(); });
+$('#focusAllBtn').addEventListener('click', () => makeFocus(cards[0]));
+
+document.addEventListener('keydown', e => {
+  if (e.key === 'Escape') $('#focusClose').click();
+  if (e.key === '/' && document.activeElement !== search) { e.preventDefault(); search.focus(); }
+});
+
+$$('.copy-btn').forEach(btn => btn.addEventListener('click', async () => {
+  const card = document.getElementById(btn.dataset.copy);
+  const text = card.innerText.replace(/Salin bagian\nFokus bagian/g, '').trim();
+  try {
+    await navigator.clipboard.writeText(text);
+    showToast('Bagian cerita disalin');
+  } catch(e) {
+    showToast('Clipboard tidak tersedia');
+  }
+}));
+
+video.addEventListener('play', () => showToast('Intro aktif • autoplay • loop • muted'));
+video.addEventListener('error', () => showToast('Pastikan intro.mp4 berada di samping index.html'));
+window.addEventListener('load', () => {
+  if (video.paused) video.play().catch(() => {});
+  applyFilter();
+});
+
+
+// Extended interaction helpers keep the page keyboard-friendly and predictable.
+const keyboardTargets = cards.map(card => card.id);
+let currentIndex = 0;
+function syncCurrentIndex() {
+  const active = navItems.findIndex(item => item.classList.contains('active'));
+  if (active >= 0) currentIndex = active;
+}
+function jumpRelative(delta) {
+  syncCurrentIndex();
+  const next = Math.max(0, Math.min(keyboardTargets.length - 1, currentIndex + delta));
+  currentIndex = next;
+  scrollToId(keyboardTargets[next]);
+}
+function setSearch(value) {
+  search.value = value;
+  applyFilter();
+}
+window.addEventListener('keydown', event => {
+  if (event.target.matches('input, textarea')) return;
+  if (event.key === 'ArrowDown') jumpRelative(1);
+  if (event.key === 'ArrowUp') jumpRelative(-1);
+});
+
+// Keep media behavior explicit for browsers that delay autoplay until a user gesture.
+function ensureIntroPlayback() {
+  video.muted = true;
+  video.loop = true;
+  video.playsInline = true;
+  const promise = video.play();
+  if (promise && typeof promise.catch === 'function') promise.catch(() => {});
+}
+ensureIntroPlayback();
+
+// Expose tiny helpers for future editing without requiring another library.
+window.AkatsukiDaybreak = {
+  scrollToId,
+  setSearch,
+  applyFilter,
+  ensureIntroPlayback,
+  chapters: keyboardTargets
+};
+
 </script>
 </body>
 </html>
